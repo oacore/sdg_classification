@@ -49,7 +49,7 @@ def write_results_to_file(args, metrics_tuple):
 
 def main():
     args = get_args()
-    sbert_model = SentenceTransformer('all-distilroberta-v1')
+    sbert_model = SentenceTransformer('all-MiniLM-L6-v2')
 
     if args.method == 'multi_label':
         if args.label_desc_finetuning:

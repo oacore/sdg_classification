@@ -111,7 +111,8 @@ def main():
         linear_classifier = load_classifier(args, multi_label_model_path)
         mlb = load_mlb(args, multi_label_model_path)
         embedding_model = load_embedding_model(args, multi_label_model_path)
-        results_df = prediction(linear_classifier, embedding_model, mlb)
+        results = sdg_prediction(linear_classifier, embedding_model, mlb)
+        results_df = pd.DataFrame(results)
         PREDICTIONS_DIR = os.path.join(OUTPUTS_DIR, trained_model_dir)
         if not os.path.exists(PREDICTIONS_DIR):
             # If it doesn't exist, create the directory

@@ -698,7 +698,17 @@ class Predict:
         y_pred = (y_pred_proba >= self.threshold).astype(int)
         # Step 5: Convert binary predictions back to labels
         predicted_labels = self.mlb.inverse_transform(y_pred)
-        return predicted_labels
+
+        # Convert y_pred_proba to a list of dictionaries with label: probability for each instance
+        predicted_probs = []
+        for i in range(len(y_pred_proba)):
+            label_prob_dict = {}
+            for label, proba in zip(self.mlb.classes_, y_pred_proba[i]):
+                if proba >= self.threshold:
+                    label_prob_dict[label] = proba
+            predicted_probs.append(label_prob_dict)
+
+        return predicted_probs
 
 def desc_finetuning(model):
     LABEL_DESC_DIR = os.path.join(DATA_DIR, 'label_desc')
@@ -765,23 +775,32 @@ def multi_label_trainer(model):
 
     return results
 
-def prediction(linear_classifier, embedding_model, mlb):
+def sdg_prediction(linear_classifier, embedding_model, mlb):
 
     METADATA_DIR = os.path.join(OUTPUT_DIR, 'metadata')
     oro_data_loader = ORODataLoader(METADATA_DIR)
     oro_df = oro_data_loader.read_dataset()
     core_ids = oro_df['id']
     inference = Predict(oro_df,  linear_classifier, embedding_model, mlb)
-    predicted_labels = inference.prediction()
-    predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
+    predicted_probs = inference.prediction()
+    #predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
 
-    # Create a DataFrame with core_ids and their corresponding predicted labels
-    output_predictions_df = pd.DataFrame({
-        'id': core_ids,
-        'predictions': predicted_labels_str
-    })
+    results = []
+    for idx, prob_dict in enumerate(predicted_probs):
+        predictions = list(prob_dict.keys())
+        confidence_scores = list(prob_dict.values())
 
-    return output_predictions_df
+        # Split the predictions and confidence scores
+        for pred, conf in zip(predictions, confidence_scores):
+            result = {
+                "id": core_ids.iloc[idx],
+                "predictions": pred,
+                "confidence_score": round(conf * 100, 2)
+            }
+            results.append(result)
+
+    return results
+    #return output_predictions_df
 
 
 

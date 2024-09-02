@@ -1,0 +1,25 @@
+label	description
+17.1.1	"Total government revenue as a proportion of GDP, by source"
+17.1.2	Proportion of domestic budget funded by domestic taxes
+17.2.1	"Net official development assistance, total and to least developed countries, as a proportion of the Organization for Economic Cooperation and Development (OECD) Development Assistance Committee donors' gross national income (GNI)"
+17.3.1	Proportion of population that feel safe walking alone around the area they live after dark
+17.3.2	Volume of remittances (in United States dollars) as a proportion of total GDP
+17.4.1	Debt service as a proportion of exports of goods and services
+17.5.1	"Number of countries that adopt and implement investment promotion regimes for developing countries, including the least developed countries"
+17.6.1	"Fixed broadband subscriptions per 100 inhabitants, by speed"
+17.7.1	"Total amount of funding for developing countries to promote the development, transfer, dissemination and diffusion of environmentally sound technologies"
+17.8.1	Proportion of individuals using the Internet
+17.9.1	"Dollar value of financial and technical assistance (including through North-South, South_South and triangular cooperation) committed to developing countries"
+17.10.1	Worldwide weighted tariff-average
+17.11.1	Developing countries' and least developed countries' share of global exports
+17.12.1	"Weighted average tariffs faced by developing countries, least developed countries and small island developing States"
+17.13.1	Macroeconomic Dashboard
+17.14.1	Number of countries with mechanisms in place to enhance policy coherence of sustainable development
+17.15.1	Extent of use of country-owned results frameworks and planning tools by providers of development cooperation
+17.16.1	Number of countries reporting progress in multi-stakeholder development effectiveness monitoring frameworks that support the achievement of the Sustainable Development Goals
+17.17.1	Amount in United States dollars committed to public-private partnerships for infrastructure
+17.18.1	Statistical capacity indicators
+17.18.2	Number of countries that have national statistical legislation that complies with the Fundamental Principles of Official Statistics
+17.18.3	"Number of countries with a national statistical plan that is fully funded and under implementation, by source of funding"
+17.19.1	Dollar value of all resources made available to strengthen statistical capacity in developing countries
+17.19.2	Proportion of countries that (a) have conducted at least one population and housing census in the last 10 years; and (b) have achieved 100 per cent birth registration and 80 per cent death registration

@@ -1,0 +1,12 @@
+label	description
+6.1.1	Proportion of population using safely managed drinking water services
+6.2.1	Proportion of population using (a) safely managed sanitation services and (b) a hand-washing facility with soap and water
+6.3.1	"Proportion of domestic and industrial wastewater flows safely treated"
+6.3.2	"Proportion of bodies of water with good ambient water quality"
+6.4.1	"Change in water-use efficiency over time"
+6.4.2	"Level of water stress: freshwater withdrawal as a proportion of available freshwater resources"
+6.5.1	Degree of integrated water resources management 
+6.5.2	"Proportion of transboundary basin area with an operational arrangement for water cooperation"
+6.6.1	"Change in the extent of water-related ecosystems over time"
+6.a.1	Amount of water- and sanitation-related official development assistance that is part of a government-coordinated spending plan
+6.b.1	Proportion of local administrative units with established and operational policies and procedures for participation of local communities in water and sanitation management

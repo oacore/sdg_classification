@@ -1,0 +1,16 @@
+label	description
+11.1.1	"Proportion of urban population living in slums, informal settlements or inadequate housing"
+11.2.1	"Proportion of population that has convenient access to public transport, by sex, age and persons with disabilities"
+11.3.1	Ratio of land consumption rate to population growth rate
+11.3.2	Proportion of cities with a direct participation structure of civil society in urban planning and management that operate regularly and democratically
+11.4.1	"Total per capita expenditure on the preservation, protection and conservation of all cultural and natural heritage, by source of funding (public, private), type of heritage (cultural, natural) and level of government (national, regional, and local/municipal)"
+11.5.1	"Number of deaths, missing persons and directly affected persons attributed to disasters per 100,000 population"
+11.5.2	Direct economic loss attributed to disasters in relation to global domestic product (GDP)
+11.5.3	"(a) Damage to critical infrastructure and (b) number of disruptions to basic services, attributed to disasters"
+11.6.1	"Proportion of municipal solid waste collected and managed in controlled facilities out of total municipal waste generated, by cities"
+11.6.2	Annual mean levels of fine particulate matter (e.g. PM2.5 and PM10) in cities (population weighted)
+11.7.1	"Average share of the built-up area of cities that is open space for public use for all, by sex, age and persons with disabilities"
+11.7.2	"Proportion of persons victim of non-sexual or sexual harassment, by sex, age, disability status and place of occurrence, in the previous 12 months"
+11.a.1	Number of countries that have national urban policies or regional development plans that (a) respond to population dynamics; (b) ensure balanced territorial development; and (c) increase local fiscal space
+11.b.1	Number of countries that adopt and implement national disaster risk reduction strategies in line with the Sendai Framework for Disaster Risk Reduction 2015-2030
+11.b.2	Proportion of local governments that adopt and implement local disaster risk reduction strategies in line with national disaster risk reduction strategies

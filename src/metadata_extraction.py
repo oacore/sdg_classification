@@ -1,6 +1,11 @@
 from tqdm import tqdm
 import re
 import os
+import time
+import logging
+
+from utils.log_utils import LogUtils
+from utils.constants import PROJECT_ROOT
 from data import DATA_DIR
 from output import OUTPUT_DIR
 from es_core import *
@@ -114,7 +119,7 @@ class COREMetaDataExtraction:
         df = pd.read_csv(self.core_ids_file, sep='\t', encoding='utf-8', engine='python')
         core_id = df['id']
 
-        for id in tqdm(core_id[:500], desc='Processing entries', unit='id'):
+        for id in tqdm(core_id, desc='Processing entries', unit='id'):
             self.core_ids.append(id)
             response = query_es_by_id(id)
             title_abstract_dict = self.get_title_abstract_es(response)
@@ -139,8 +144,14 @@ class COREMetaDataExtraction:
 
 if __name__ == "__main__":
     # Initialize the MetaData class with appropriate paths
+    LogUtils.setup_logging(log_file_path=f'{PROJECT_ROOT}/repo.log')
+    logger = logging.getLogger(__name__)
+    start_time = time.time()
+    logger.info(f'Starting metadata extraction for the given core_ids at: {start_time}')
     metadata_processor = COREMetaDataExtraction(DATA_DIR, OUTPUT_DIR, os.path.join(DATA_DIR, 'core_ids', "oro.tsv"))
     metadata_processor.run()
+    end_time = time.time()
+    logger.info(f'Metadata extraction completed at: {end_time}')
 
 
 

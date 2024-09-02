@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import random
 import pickle
+import csv
+from io import StringIO
 import ast
 from utils.configs_util import load_config
 import logging
@@ -104,6 +106,9 @@ class ORODataLoader:
 
         df = pd.read_csv(os.path.join(self.oro_data_dir, 'oro_title_abstracts.txt'),
                                             sep='\t', encoding='utf-8', engine='python', on_bad_lines='skip')
+
+        # df = pd.read_csv(StringIO(os.path.join(self.oro_data_dir, 'oro_title_abstracts.txt')), sep='\t', encoding='utf-8',
+        #                  engine='python', quoting=csv.QUOTE_ALL, escapechar='\\', header=None)
         df['title'].fillna('', inplace=True)
         df['abstract'].fillna('', inplace=True)
         df['text'] = df['title'] + '. ' + df['abstract']

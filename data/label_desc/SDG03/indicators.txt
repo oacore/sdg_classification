@@ -1,0 +1,29 @@
+label	description
+3.1.1	Maternal mortality ratio
+3.1.2	Proportion of births attended by skilled health personnel
+3.2.1	Under-five mortality rate
+3.2.2	Neonatal mortality rate
+3.3.1	"Number of new HIV infections per 1,000 uninfected population, by sex, age and key populations"
+3.3.2	"Tuberculosis incidence per 100,000 population"
+3.3.3	"Malaria incidence per 1,000 population"
+3.3.4	"Hepatitis B incidence per 100,000 population"
+3.3.5	Number of people requiring interventions against neglected tropical diseases
+3.4.1	"Mortality rate attributed to cardiovascular disease, cancer, diabetes or chronic respiratory disease"
+3.4.2	Suicide mortality rate
+3.5.1	"Coverage of treatment interventions (pharmacological, psychosocial and rehabilitation and aftercare services) for substance use disorders"
+3.5.2	Alcohol per capita consumption (aged 15 years and older) within a calendar year in litres of pure alcohol
+3.6.1	Death rate due to road traffic injuries
+3.7.1	Proportion of women of reproductive age (aged 15-49 years) who have their need for family planning satisfied with modern methods
+3.7.2	"Adolescent birth rate (aged 10-14 years; aged 15-19 years) per 1,000 women in that age group"
+3.8.1	Coverage of essential health services
+3.8.2	Proportion of population with large household expenditures on health as a share of total household expenditure or income
+3.9.1	Mortality rate attributed to household and ambient air pollution
+3.9.2	"Mortality rate attributed to unsafe water, unsafe sanitation and lack of hygiene (exposure to unsafe Water, Sanitation and Hygiene for All (WASH) services)"
+3.9.3	Mortality rate attributed to unintentional poisoning
+3.a.1	Age-standardized prevalence of current tobacco use among persons aged 15 years and older
+3.b.1	Proportion of the target population covered by all vaccines included in their national programme
+3.b.2	Total net official development assistance to medical research and basic health sectors
+3.b.3	Proportion of health facilities that have a core set of relevant essential medicines available and affordable on a sustainable basis
+3.c.1	Health worker density and distribution
+3.d.1	International Health Regulations (IHR) capacity and health emergency preparedness
+3.d.2	Percentage of bloodstream infections due to selected antimicrobial-resistant organisms

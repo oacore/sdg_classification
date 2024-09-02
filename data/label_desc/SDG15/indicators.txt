@@ -1,0 +1,15 @@
+label	description
+15.1.1	Forest area as a proportion of total land area
+15.1.2	"Proportion of important sites for terrestrial and freshwater biodiversity that are covered by protected areas, by ecosystem type"
+15.2.1	Progress towards sustainable forest management
+15.3.1	Proportion of land that is degraded over total land area
+15.4.1	Coverage by protected areas of important sites for mountain biodiversity
+15.4.2	Mountain Green Cover Index
+15.5.1	Red List Index
+15.6.1	"Number of countries that have adopted legislative, administrative and policy frameworks to ensure fair and equitable sharing of benefits"
+15.7.1	Proportion of traded wildlife that was poached or illicitly trafficked
+15.8.1	Proportion of countries adopting relevant national legislation and adequately resourcing the prevention or control of invasive alien species
+15.9.1	"(a) Number of countries that have established national targets in accordance with or similar to Aichi Biodiversity Target 2 of the Strategic Plan for Biodiversity 2011-2020 in their national biodiversity strategy and action plans and the progress reported towards these targets; and (b) integration of biodiversity into national accounting and reporting systems, defined as implementation of the System of Environmental-Economic Accounting"
+15.a.1	(a) Official development assistance on conservation and sustainable use of biodiversity; and (b) revenue generated and finance mobilized from biodiversity-relevant economic instruments
+15.b.1	(a) Official development assistance on conservation and sustainable use of biodiversity; and (b) revenue generated and finance mobilized from biodiversity-relevant economic instruments
+15.c.1	Proportion of traded wildlife that was poached or illicitly trafficked

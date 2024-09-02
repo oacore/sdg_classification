@@ -1,0 +1,14 @@
+label	description
+12.1.1	"Number of countries developing, adopting or implementing policy instruments aimed at supporting the shift to sustainable consumption and production"
+12.2.1	"Material footprint, material footprint per capita, and material footprint per GDP"
+12.2.2	"Domestic material consumption, domestic material consumption per capita, and domestic material consumption per GDP"
+12.3.1	(a) Food loss index and (b) food waste index
+12.4.1	"Number of parties to international multilateral environmental agreements on hazardous waste, and other chemicals that meet their commitments and obligations in transmitting information as required by each relevant agreement"
+12.4.2	"(a) Hazardous waste generated per capita; and (b) proportion of hazardous waste treated, by type of treatment"
+12.5.1	"National recycling rate, tons of material recycled"
+12.6.1	Number of companies publishing sustainability reports
+12.7.1	Number of countries implementing sustainable public procurement policies and action plans
+12.8.1	Extent to which (i) global citizenship education and (ii) education for sustainable development are mainstreamed in (a) national education policies; (b) curricula; (c) teacher education; and (d) student assessment
+12.a.1	Installed renewable energy-generating capacity in developing and developed countries (in watts per capita)
+12.b.1	Implementation of standard accounting tools to monitor the economic and environmental aspects of tourism sustainability
+12.c.2	Amount of fossil-fuel subsidies (production and consumption) per unit of GDP

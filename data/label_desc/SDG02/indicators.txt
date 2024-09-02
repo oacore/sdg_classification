@@ -1,0 +1,15 @@
+label	description
+2.1.1	Prevalence of undernourishment
+2.1.2	"Prevalence of moderate or severe food insecurity in the population, based on the Food Insecurity Experience Scale (FIES)"
+2.2.1	Prevalence of stunting (height for age <-2 standard deviation from the median of the World Health Organization (WHO) Child Growth Standards) among children under 5 years of age
+2.2.2	"Prevalence of malnutrition (weight for height >+2 or <-2 standard deviation from the median of the WHO Child Growth Standards) among children under 5 years of age, by type (wasting and overweight)"
+2.2.3	"Prevalence of anaemia in women aged 15 to 49 years, by pregnancy status (percentage)"
+2.3.1	Volume of production per labour unit by classes of farming/pastoral/forestry enterprise size
+2.3.2	"Average income of small-scale food producers, by sex and indigenous status"
+2.4.1	Proportion of agricultural area under productive and sustainable agriculture
+2.5.1	Number of (a) plant and (b) animal genetic resources for food and agriculture secured in either medium- or long-term conservation facilities
+2.5.2	Proportion of local breeds classified as being at risk of extinction
+2.a.1	The agriculture orientation index for government expenditures
+2.a.2	Total official flows (official development assistance plus other official flows) to the agriculture sector
+2.b.1	Agricultural export subsidies
+2.c.1	Indicator of food price anomalies

@@ -1,0 +1,17 @@
+label	description
+8.1.1	"Annual growth rate of real GDP per capita"
+8.2.1	"Annual growth rate of real GDP per employed person"
+8.3.1	"Proportion of informal employment in total employment, by sector and sex"
+8.4.1	"Material footprint, material footprint per capita, and material footprint per GDP"
+8.4.2	"Domestic material consumption, domestic material consumption per capita, and domestic material consumption per GDP"
+8.5.1	"Average hourly earnings of female and male employees, by occupation, age and persons with disabilities"
+8.5.2	"Unemployment rate, by sex, age and persons with disabilities"
+8.6.1	"Proportion of youth (aged 15-24 years) not in education, employment or training"
+8.7.1	"Proportion and number of children aged 5_17 years engaged in child labour, by sex and age"
+8.8.1	"Fatal and non-fatal occupational injuries per 100,000 workers, by sex and migrant status"
+8.8.2	"Level of national compliance with labour rights (freedom of association and collective bargaining) based on International Labour Organization (ILO) textual sources and national legislation, by sex and migrant status"
+8.9.1	Tourism direct GDP as a proportion of total GDP and in growth rate
+8.10.1	"(a) Number of commercial bank branches per 100,000 adults and (b) number of automated teller machines (ATMs) per 100,000 adults"
+8.10.2	Proportion of adults (15 years and older) with an account at a bank or other financial institution or with a mobile-money-service provider
+8.a.1	Aid for Trade commitments and disbursements
+8.b.1	"Existence of a developed and operationalized national strategy for youth employment, as a distinct strategy or as part of a national employment strategy"

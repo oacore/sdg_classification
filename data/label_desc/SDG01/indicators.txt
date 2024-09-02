@@ -1,0 +1,14 @@
+label	description
+1.1.1	"Proportion of the population living below the international poverty line by sex, age, employment status and geographical location (urban/rural)"
+1.2.1	"Proportion of population living below the national poverty line, by sex and age"
+1.2.2	"Proportion of men, women and children of all ages living in poverty in all its dimensions according to national definitions"
+1.3.1	"Proportion of population covered by social protection floors/systems, by sex, distinguishing children, unemployed persons, older persons, persons with disabilities, pregnant women, newborns, work-injury victims and the poor and the vulnerable"
+1.4.1	Proportion of population living in households with access to basic services
+1.4.2	"Proportion of total adult population with secure tenure rights to land, (a) with legally recognized documentation, and (b) who perceive their rights to land as secure, by sex and by type of tenure"
+1.5.1	"Number of deaths, missing persons and directly affected persons attributed to disasters per 100,000 population"
+1.5.2	Direct economic loss attributed to disasters in relation to global gross domestic product (GDP)
+1.5.3	Number of countries that adopt and implement national disaster risk reduction strategies in line with the Sendai Framework for Disaster Risk Reduction 2015-2030
+1.5.4	Proportion of local governments that adopt and implement local disaster risk reduction strategies in line with national disaster risk reduction strategies
+1.a.1	Total official development assistance grants from all donors that focus on poverty reduction as a share of the recipient country's gross national income
+1.a.2	"Proportion of total government spending on essential services (education, health and social protection)"
+1.b.1	Pro-poor public social spending

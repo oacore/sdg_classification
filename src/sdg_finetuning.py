@@ -1,13 +1,16 @@
 import os
 import pandas as pd
 import random
+import pickle
 import ast
+from utils.configs_util import load_config
+import logging
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from nltk.stem import WordNetLemmatizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
 from transformers import AutoTokenizer
-from evaluation import *
+from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.metrics import (
     precision_score, recall_score, f1_score, hamming_loss, jaccard_score,
     log_loss, average_precision_score
@@ -15,11 +18,13 @@ from sklearn.metrics import (
 from sentence_transformers import SentenceTransformer, InputExample, losses, models, datasets, evaluation
 from torch.utils.data import DataLoader
 from data import DATA_DIR
+from models import MODEL_DIR
+from output import OUTPUT_DIR
 from utils.constants import NON_OVERLAPPING_SDGS
 from warnings import simplefilter
 from sklearn.model_selection import train_test_split
 from arg_parser import get_args
-
+import numpy as np
 # ignore all future warnings
 simplefilter(action='ignore', category=FutureWarning)
 
@@ -49,7 +54,6 @@ class DescriptionDataLoader:
         return sdg_definitions
 
 
-
 class MultiLabelDatasetLoader:
     def __init__(self, multi_label_data_dir):
         self.multi_label_data_dir = multi_label_data_dir
@@ -73,6 +77,38 @@ class MultiLabelDatasetLoader:
 
         train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
         return train_df, test_df
+
+
+class MultiLabelDatasetOROLoader:
+    def __init__(self, multi_label_data_oro_dir):
+        self.multi_label_data_oro_dir = multi_label_data_oro_dir
+
+
+    def read_dataset(self):
+
+        df = pd.read_csv(os.path.join(self.multi_label_data_oro_dir, 'multi_label_sdg_manual_annotations_oro.txt'),
+                                            sep='\t', encoding='utf-8', engine='python')
+        df['abstract'].fillna('', inplace=True)
+        df['text'] = df['title'] + '. ' + df['abstract']
+
+        #df['human_annotator'] = df.apply(self.create_labels, axis=1)
+
+        train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+        return train_df, test_df
+
+class ORODataLoader:
+    def __init__(self, oro_data_dir):
+        self.oro_data_dir = oro_data_dir
+
+    def read_dataset(self):
+
+        df = pd.read_csv(os.path.join(self.oro_data_dir, 'oro_title_abstracts.txt'),
+                                            sep='\t', encoding='utf-8', engine='python', on_bad_lines='skip')
+        df['title'].fillna('', inplace=True)
+        df['abstract'].fillna('', inplace=True)
+        df['text'] = df['title'] + '. ' + df['abstract']
+
+        return df
 
 class DescriptionFineTuning:
     def __init__(self, sdg_definitions, non_overlapping_sdgs, sbert_model):
@@ -128,11 +164,10 @@ class MultiLabelSBERTFineTuning:
         #self.test_df = test_df
         self.sbert_model = sbert_model
         self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-distilroberta-v1')
-        self.text_col = self.train_df.columns.values[3]
+        #self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
+        self.text = self.train_df.columns.values[3]
         self.labels_col = self.train_df.columns.values[23]
 
-        # self.text_col = self.train_df.columns.values[3]
-        # self.labels_col = self.train_df.columns.values[2]
 
     def get_unique_labels(self, y_train):
         unique_labels = set()
@@ -181,7 +216,7 @@ class MultiLabelSBERTFineTuning:
         train_positive = []
         for sdg in range(1, 18):
             sdg_str = f'SDG{str(sdg).zfill(2)}'
-            positive_df = self.train_df[self.train_df['labels'].apply(lambda labels: sdg_str in labels and len(labels) <= 10)]
+            positive_df = self.train_df[self.train_df['labels'].apply(lambda labels: sdg_str in labels and len(labels) <= 7)]
             #sdg_negative_df = self.train_df[(self.train_df[sdgs] == sdg) & (self.train_df[labels] == False)]
 
             if len(positive_df) >= args.num_training:
@@ -189,7 +224,7 @@ class MultiLabelSBERTFineTuning:
 
         train_df_sample = pd.concat(train_positive).reset_index(drop=True)
         # train_df_negative_sample = pd.concat(balanced_train_negative).reset_index(drop=True)
-        x_train = train_df_sample[self.text_col].values.tolist()
+        x_train = train_df_sample[self.text].values.tolist()
         y_train = train_df_sample[self.labels_col].values.tolist()
 
         return x_train, y_train
@@ -220,10 +255,129 @@ class MultiLabelSBERTFineTuning:
         return self.tokenizer.convert_tokens_to_string(truncated_tokens)
 
     def sbert_finetuning(self, train_examples):
+        #print(len(train_examples))
+        random.shuffle(train_examples)
+        truncated_train_examples = []
+        for example in train_examples:
+            truncated_texts = [
+                self.head_tail_truncation(text) for text in example.texts
+            ]
+            truncated_train_examples.append(InputExample(texts=truncated_texts, label=example.label))
+
+        # S-BERT adaptation
+        #train_dataloader = DataLoader(train_examples, shuffle=True, batch_size=16)
+        train_dataloader = DataLoader(truncated_train_examples, shuffle=True, batch_size=16)
+        train_loss = losses.CosineSimilarityLoss(self.sbert_model)
+        self.sbert_model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=1, warmup_steps=10,
+                                     show_progress_bar=True)
+
+        return self.sbert_model
+
+class MultiLabelOROSBERTFineTuning:
+    def __init__(self, train_df, sbert_model):
+        self.train_df = train_df
+        self.sbert_model = sbert_model
+        self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-distilroberta-v1')
+        self.text = self.train_df.columns.values[4]
+        self.labels_col = self.train_df.columns.values[3]
+
+    def get_unique_labels(self, y_train):
+        unique_labels = set()
+        for labels in y_train:
+            unique_labels.update(labels)
+        return list(unique_labels)
+
+    def sentence_pairs_generation(self, sentences, labels, pairs):
+
+        label_sets = [set(label) for label in labels]
+        for idxA in range(len(sentences)):
+            current_sentence = sentences[idxA]
+            label = label_sets[idxA]
+            pos_indices = [idx for idx, lbl_set in enumerate(label_sets) if lbl_set == label and idx != idxA]
+            if not pos_indices:
+
+                pos_indices = [idx for idx, lbl_set in enumerate(label_sets) if lbl_set & label and idx != idxA]
+                pos_idx = np.random.choice(pos_indices)
+                pos_sentence = sentences[pos_idx]
+                #label_pos = label_sets[idxB]
+                pairs.append(InputExample(texts=[current_sentence, pos_sentence], label=1.0))
+
+                if not pos_indices:
+                    print("No positive sentence found.\n")
+                    continue
+
+            else:
+                pos_idx = np.random.choice(pos_indices)
+                pos_sentence = sentences[pos_idx]
+                pairs.append(InputExample(texts=[current_sentence, pos_sentence], label=1.0))
+
+            neg_indices = [idx for idx, lbl_set in enumerate(label_sets) if lbl_set != label and idx != idxA]
+            if not neg_indices:
+                print("No negative sentence found.\n")
+                continue
+
+            else:
+                neg_idx = np.random.choice(neg_indices)
+                neg_sentence = sentences[neg_idx]
+                pairs.append(InputExample(texts=[current_sentence, neg_sentence], label=0.0))
+
+        return (pairs)
+
+    def sample_train_data(self, args):
+
+        train_positive = []
+        for sdg in range(1, 18):
+            sdg_str = f'SDG{str(sdg).zfill(2)}'
+            positive_df = self.train_df[
+                self.train_df['human_annotator'].apply(lambda labels: sdg_str in labels)]
+            #sdg_negative_df = self.train_df[(self.train_df[sdgs] == sdg) & (self.train_df[labels] == False)]
+
+            if len(positive_df) >= args.num_training:
+                train_positive.append(positive_df.sample(n=args.num_training, random_state=args.seed))
+
+        train_df_sample = pd.concat(train_positive).reset_index(drop=True)
+        #train_df_sample['combined_text'] = train_df_sample['title'] + '. ' + train_df_sample['abstract']
+        #print(train_df_sample['combined_text'])
+        # train_df_negative_sample = pd.concat(balanced_train_negative).reset_index(drop=True)
+        x_train = train_df_sample[self.text].values.tolist()
+        y_train = train_df_sample[self.labels_col].values.tolist()
+        # print(len(x_train))
+        # print(len(y_train))
+
+        return x_train, y_train
+
+    def prepare_data(self):
+
+        train_examples = []
+        args = get_args()
+        x_train, y_train = self.sample_train_data(args)
+        for x in range(args.num_iter):
+            train_examples = self.sentence_pairs_generation(x_train, y_train, train_examples)
+
+        return x_train, y_train, train_examples
+
+    def head_tail_truncation(self, text, max_length=512, head_tokens=128, tail_tokens=382):
+        """
+        Truncates the input text, keeping the first `head_tokens` and the last `tail_tokens` tokens,
+        ensuring the total length does not exceed `max_length`.
+        """
+        #print(text)
+        tokens = self.tokenizer.tokenize(text)
+        if len(tokens) > max_length:
+            if head_tokens + tail_tokens > max_length:
+                raise ValueError("Sum of head_tokens and tail_tokens exceeds max_length.")
+            truncated_tokens = tokens[:head_tokens] + tokens[-tail_tokens:]
+        else:
+            truncated_tokens = tokens
+
+        return self.tokenizer.convert_tokens_to_string(truncated_tokens)
+
+    def sbert_finetuning(self, train_examples):
 
         random.shuffle(train_examples)
         truncated_train_examples = []
         for example in train_examples:
+
             truncated_texts = [
                 self.head_tail_truncation(text) for text in example.texts
             ]
@@ -244,13 +398,13 @@ class LinearClassifier:
         self.linear_classifier = OneVsRestClassifier(LogisticRegression())
         self.mlb = MultiLabelBinarizer()
         self.test_df = test_df
-        self.text_col = self.test_df.columns.values[3]
+        self.text = self.test_df.columns.values[3]
         self.labels_col = self.test_df.columns.values[23]
 
 
     def train_model(self, x_train, y_train, model):
 
-        x_eval = self.test_df[self.text_col].values.tolist()
+        x_eval = self.test_df[self.text].values.tolist()
         y_train_binary = self.mlb.fit_transform(y_train)
 
         X_train = np.array(model.encode(x_train))
@@ -258,19 +412,19 @@ class LinearClassifier:
 
         y_train_binary = np.array(y_train_binary)
         self.linear_classifier.fit(X_train, y_train_binary)
-        return X_eval, self.linear_classifier
+        return X_eval, self.linear_classifier, self.mlb
 
-    def predict(self, X_eval, threshold=0.5):
-        # Predict probabilities
-        y_pred_proba = self.linear_classifier.predict_proba(X_eval)
-
-        # Apply threshold to get binary predictions
-        y_pred = (y_pred_proba >= threshold).astype(int)
-
-        # Convert binary predictions back to labels
-        predicted_labels = self.mlb.inverse_transform(y_pred)
-
-        return predicted_labels, y_pred_proba, y_pred
+    # def predict(self, X_eval, threshold=0.5):
+    #     # Predict probabilities
+    #     y_pred_proba = self.linear_classifier.predict_proba(X_eval)
+    #
+    #     # Apply threshold to get binary predictions
+    #     y_pred = (y_pred_proba >= threshold).astype(int)
+    #
+    #     # Convert binary predictions back to labels
+    #     predicted_labels = self.mlb.inverse_transform(y_pred)
+    #
+    #     return predicted_labels, y_pred_proba, y_pred
 
     def eval_model(self, X_eval, classifier):
         """
@@ -344,25 +498,22 @@ class LinearClassifierORO:
         self.linear_classifier = OneVsRestClassifier(LogisticRegression())
         self.mlb = MultiLabelBinarizer()
         self.test_df = test_df
-        self.text_col = self.test_df.columns.values[7]
-        self.labels_col = self.test_df.columns.values[6]
-
+        #self.text = self.test_df.columns.values[7]
+        self.labels_col = self.test_df.columns.values[3]
 
 
     def train_model(self, x_train, y_train, model):
-
-        x_eval = self.test_df[self.text_col].values.tolist()
-
+        self.test_df['combined_text'] = self.test_df['title'] + '. ' + self.test_df['abstract']
+        #x_eval = self.test_df[self.text].values.tolist()
+        x_eval = self.test_df['combined_text'].values.tolist()
         y_train_binary = self.mlb.fit_transform(y_train)
-
         X_train = np.array(model.encode(x_train))
         X_eval = np.array(model.encode(x_eval))
 
         y_train_binary = np.array(y_train_binary)
         #self.linear_classifier.fit(X_train, y_train)
         self.linear_classifier.fit(X_train, y_train_binary)
-        return X_eval, self.linear_classifier
-
+        return X_eval, self.linear_classifier, self.mlb
 
 
     def eval_model(self, X_eval, classifier):
@@ -429,17 +580,17 @@ class LinearClassifierORO:
         return (strict_accuracy, weak_accuracy, hamming, precision_micro, recall_micro, f1_micro, precision_macro,
                 recall_macro, f1_macro, jaccard_sim, logloss, macro_mAP, weighted_mAP, micro_mAP, APs)
 
-    def predict(self, X_eval, threshold=0.5):
-        # Predict probabilities
-        y_pred_proba = self.linear_classifier.predict_proba(X_eval)
-
-        # Apply threshold to get binary predictions
-        y_pred = (y_pred_proba >= threshold).astype(int)
-
-        # Convert binary predictions back to labels
-        predicted_labels = self.mlb.inverse_transform(y_pred)
-
-        return predicted_labels, y_pred_proba, y_pred
+    # def predict(self, X_eval, threshold=0.5):
+    #     # Predict probabilities
+    #     y_pred_proba = self.linear_classifier.predict_proba(X_eval)
+    #
+    #     # Apply threshold to get binary predictions
+    #     y_pred = (y_pred_proba >= threshold).astype(int)
+    #
+    #     # Convert binary predictions back to labels
+    #     predicted_labels = self.mlb.inverse_transform(y_pred)
+    #
+    #     return predicted_labels, y_pred_proba, y_pred
 
     def evaluate_metrics(self, y_eval, y_pred, y_pred_proba):
         # Handle empty values (consider filtering or imputation)
@@ -508,6 +659,47 @@ class LinearClassifierORO:
         return metrics
 
 
+class Predict:
+
+    def __init__(self, oro_df, linear_classifier, embedding_model, mlb):
+
+        self.oro_df = oro_df
+        self.linear_classifier = linear_classifier
+        self.embedding_model = embedding_model
+        self.mlb = mlb
+        self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-distilroberta-v1')
+        self.threshold = 0.5
+
+
+    def head_tail_truncation(self, text, max_length=512, head_tokens=128, tail_tokens=382):
+        """
+        Truncates the input text, keeping the first `head_tokens` and the last `tail_tokens` tokens,
+        ensuring the total length does not exceed `max_length`.
+        """
+        tokens = self.tokenizer.tokenize(text)
+        if len(tokens) > max_length:
+            if head_tokens + tail_tokens > max_length:
+                raise ValueError("Sum of head_tokens and tail_tokens exceeds max_length.")
+            truncated_tokens = tokens[:head_tokens] + tokens[-tail_tokens:]
+        else:
+            truncated_tokens = tokens
+
+        return self.tokenizer.convert_tokens_to_string(truncated_tokens)
+
+    def prediction(self):
+
+        #x_eval = self.oro_df['text'].values.tolist()
+        self.oro_df['truncated_text'] = self.oro_df['text'].apply(lambda x: self.head_tail_truncation(x))
+        x_eval_truncated = self.oro_df['truncated_text'].values.tolist()
+        X_eval = np.array(self.embedding_model.encode(x_eval_truncated))
+        y_pred_proba = self.linear_classifier.predict_proba(X_eval)
+
+        # Step 4: Apply threshold to get binary predictions
+        y_pred = (y_pred_proba >= self.threshold).astype(int)
+        # Step 5: Convert binary predictions back to labels
+        predicted_labels = self.mlb.inverse_transform(y_pred)
+        return predicted_labels
+
 def desc_finetuning(model):
     LABEL_DESC_DIR = os.path.join(DATA_DIR, 'label_desc')
 
@@ -518,23 +710,80 @@ def desc_finetuning(model):
     model = sdg_trainer.train_model(train_examples)
     return model
 
-def multi_label_classification(model):
+def multi_label_trainer(model):
     args = get_args()
-    MULTI_LABEL_DATA_DIR = os.path.join(DATA_DIR, 'sdg_knowledge_hub')
-    multi_label_data_loader = MultiLabelDatasetLoader(MULTI_LABEL_DATA_DIR)
-    train_df, test_df = multi_label_data_loader.read_dataset()
+    trained_model_dir = str
+    config_data = load_config()
+    logger = logging.getLogger(__name__)
+    if "timed_dir" in config_data:
+        trained_model_dir = config_data["timed_dir"]
+    else:
+        logger.info('Check the config path')
+    MULTI_LABEL_OOD_DATA_DIR = os.path.join(DATA_DIR, 'sdg_knowledge_hub')
+    MULTI_LABEL_ORO_DATA_DIR = os.path.join(DATA_DIR, 'manually_annotated_oro')
 
-    sbert_finetuning = MultiLabelSBERTFineTuning(train_df, model)
-    x_train, y_train, train_examples = sbert_finetuning.prepare_data()
+    if args.dataset == 'knowledge_hub':
+        multi_label_data_loader = MultiLabelDatasetLoader(MULTI_LABEL_OOD_DATA_DIR)
+        train_df, test_df = multi_label_data_loader.read_dataset()
+        SBERT_finetuning = MultiLabelSBERTFineTuning(train_df, model)
+
+    else:
+        multi_label_data_loader = MultiLabelDatasetOROLoader(MULTI_LABEL_ORO_DATA_DIR)
+        train_df, test_df = multi_label_data_loader.read_dataset()
+        SBERT_finetuning = MultiLabelOROSBERTFineTuning(train_df, model)
+
+    #train_df, test_df = multi_label_data_loader.read_dataset()
+    #sbert_finetuning = MultiLabelSBERTFineTuning(train_df, model)
+    x_train, y_train, train_examples = SBERT_finetuning.prepare_data()
+
     if args.multi_label_finetuning:
-        embedding_model = sbert_finetuning.sbert_finetuning(train_examples)
+        embedding_model = SBERT_finetuning.sbert_finetuning(train_examples)
     else:
         embedding_model = model
-    multilabel_sdg_trainer = LinearClassifier(test_df)
-    X_eval, classifier = multilabel_sdg_trainer.train_model(x_train, y_train, embedding_model)
+
+    multi_label_model_path = os.path.join(MODEL_DIR, os.path.basename(trained_model_dir))
+    embedding_model.save_pretrained(os.path.join(multi_label_model_path, f"sbert_embedding_model{args.dataset}"))
+    # with open(os.path.join(multi_label_classifier_path, f"sbert_embedding_model{args.dataset}.pkl"), "wb") as model_file:
+    #     pickle.dump(embedding_model, model_file)
+
+    if args.dataset == 'knowledge_hub':
+
+        multilabel_sdg_trainer = LinearClassifier(test_df)
+        X_eval, classifier, mlb = multilabel_sdg_trainer.train_model(x_train, y_train, embedding_model)
+
+    else:
+        multilabel_sdg_trainer = LinearClassifierORO(test_df)
+        X_eval, classifier, mlb = multilabel_sdg_trainer.train_model(x_train, y_train, embedding_model)
+
+    with open(os.path.join(multi_label_model_path, f"linear_classifier_{args.dataset}.pkl"), "wb") as model_file:
+        pickle.dump(classifier, model_file)
+
+    with open(os.path.join(multi_label_model_path, f"mlb_{args.dataset}.pkl"), "wb") as mlb_file:
+        pickle.dump(mlb, mlb_file)
+
     results = multilabel_sdg_trainer.eval_model(X_eval, classifier)
 
     return results
+
+def prediction(linear_classifier, embedding_model, mlb):
+
+    METADATA_DIR = os.path.join(OUTPUT_DIR, 'metadata')
+    oro_data_loader = ORODataLoader(METADATA_DIR)
+    oro_df = oro_data_loader.read_dataset()
+    core_ids = oro_df['id']
+    inference = Predict(oro_df,  linear_classifier, embedding_model, mlb)
+    predicted_labels = inference.prediction()
+    predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
+
+    # Create a DataFrame with core_ids and their corresponding predicted labels
+    output_predictions_df = pd.DataFrame({
+        'id': core_ids,
+        'predictions': predicted_labels_str
+    })
+
+    return output_predictions_df
+
+
 
 
 

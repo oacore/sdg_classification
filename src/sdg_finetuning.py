@@ -900,8 +900,8 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
         abstract = title_abstract.get('abstract', '')
         prob_dict = inference.predict_from_title_abstract(title, abstract)
 
-        if "error" in prob_dict:
-            return prob_dict  # Return the error message if core ID is not found
+        # if "error" in prob_dict:
+        #     return prob_dict  # Return the error message if core ID is not found
 
         for pred, conf in prob_dict.items():
             result = {

@@ -734,6 +734,8 @@ class Predict:
 
     def predict_from_title_abstract(self, title, abstract):
 
+        title = title if title is not None else ""
+        abstract = abstract if abstract is not None else ""
         text = title + ". " + abstract
         truncated_text = self.head_tail_truncation(text)
         X_eval = np.array(self.embedding_model.encode([truncated_text]))
@@ -869,7 +871,7 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
             # Split the predictions and confidence scores
             for pred, conf in zip(predictions, confidence_scores):
                 result = {
-                    "id": core_ids.iloc[idx],
+                    "core_id": core_ids.iloc[idx],
                     "predictions": pred,
                     "confidence_score": round(conf * 100, 2)
                 }
@@ -883,13 +885,13 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
 
         for pred, conf in prob_dict.items():
             result = {
-                "id": core_id,
+                "core_id": core_id,
                 "predictions": pred,
                 "confidence_score": round(conf * 100, 2)
             }
             results.append(result)
 
-    elif input_type == 'coreid':
+    elif input_type == 'core_id':
         core_id = input_value
         response = query_es_by_id(core_id)
         metadata_processor = CORESingleMetaDataExtraction()

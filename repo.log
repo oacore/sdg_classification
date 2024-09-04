@@ -781,3 +781,85 @@ DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transfor
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
 DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 126
 INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 17:14:59] "GET /classify_text?title=&abstract=Global%20imaginations%20on%20human%20trafficking%20have%20been%20captured%20by%20a%20robust%20mythology%20that%20constructs%20the%20consenting%20Third%20World%20sex%20worker%20as%20simply%20a%20victim%20of%20trafficking%20for%20sexual%20exploitation.%20This%20anti-trafficking%20discourse%20has%20influenced%20Cambodia’s%20legal%20reform,%20which%20has%20resulted%20in%20an%20increase%20of%20abuse%20against%20sex%20workers%20and%20has%20denied%20Cambodian%20women%20their%20right%20to%20marry%20foreign%20men.%20Despite%20evidence%20indicating%20the%20diversity%20of%20the%20sex%20industry%20and%20its%20correlation%20to%20different%20levels%20of%20sex%20workers’%20autonomy,%20decision-makers%20have%20failed%20to%20revise%20the%20anti-trafficking%20framework%20to%20reflect%20the%20reality%20of%20the%20divergent%20lives%20of%20women%20who%20engage%20in%20sex%20as%20a%20livelihood. HTTP/1.1" 200 -
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5007
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:20:03] "[31m[1mGET /classify_coreid?coreid=82983940 HTTP/1.1[0m" 400 -
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 1446
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:20:32] "[35m[1mGET /classify_coreid?core_id=82983940 HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/sdg_finetuning.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 1447
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:24:12] "GET /classify_coreid?core_id=82983940 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 2246
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:27:33] "GET /classify_coreid?core_id=82978124 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 127
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:27:41] "GET /classify_coreid?core_id=8297 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 1899
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:27:51] "GET /classify_coreid?core_id=007 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 128
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:31:33] "GET /classify_coreid?core_id=19527210 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 126
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:32:35] "GET /classify_coreid?core_id=1952721000 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 126
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:32:40] "GET /classify_coreid?core_id=1952721000000 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 1706
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:33:33] "GET /classify_coreid?core_id=82975845 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 2533
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:34:18] "GET /classify_coreid?core_id=82976624 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 1982
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:34:43] "GET /classify_coreid?core_id=131316441 HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 1390
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:35:24] "GET /classify_coreid?core_id=82924452 HTTP/1.1" 200 -

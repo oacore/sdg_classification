@@ -863,3 +863,11 @@ DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transfor
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
 DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 1390
 INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 21:35:24] "GET /classify_coreid?core_id=82924452 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/sdg_finetuning.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694

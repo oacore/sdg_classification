@@ -66,6 +66,7 @@ class COREMetaDataExtraction:
 
         return self.title_abstract
 
+
     @limits(calls=50, period=RATE_LIMIT)
     def get_title_abstract_api(self, id):
         id = str(id)
@@ -141,6 +142,71 @@ class COREMetaDataExtraction:
     def run(self):
         self.process_core_ids()
         self.save_to_file()
+
+class CORESingleMetaDataExtraction:
+    def __init__(self):
+        self.title_abstract = {}
+
+    def get_title_abstract_es(self, response):
+
+        try:
+            if response['hits']['total'] > 0:
+                for hit in response["hits"]["hits"]:
+                    title = hit['_source'].get('title', '')
+                    if title is not None:
+                        title = title.replace("\n", "")
+                        title = self.remove_html_tags(title)
+
+                    abstract = hit['_source'].get('description', '')
+                    if abstract is not None:
+                        abstract = abstract.replace("\n", "")
+                        abstract = self.remove_html_tags(abstract)
+
+                    if title or abstract:
+                        self.title_abstract['title'] = title
+                        self.title_abstract['abstract'] = abstract
+                    else:
+                        self.title_abstract['title'] = ''
+                        self.title_abstract['abstract'] = ''
+            else:
+                self.title_abstract['title'] = ''
+                self.title_abstract['abstract'] = ''
+
+        except Exception as e:
+            print("Exception:", e)
+            self.title_abstract['title'] = ''
+            self.title_abstract['abstract'] = ''
+
+        return self.title_abstract
+
+    def remove_html_tags(self, text):
+        """Remove HTML tags from a string using regex."""
+        clean = re.compile('<.*?>')
+        return re.sub(clean, '', text)
+
+
+
+def get_core_id(response):
+
+    try:
+        if response['hits']['total'] > 0:
+            for hit in response["hits"]["hits"]:
+                core_id = hit['_source'].get('id', '')
+
+        else:
+            core_id = ''
+
+    except Exception as e:
+        print("Exception:", e)
+        core_id = ''
+
+    return core_id
+
+
+
+
+
+
 
 if __name__ == "__main__":
     # Initialize the MetaData class with appropriate paths

@@ -62,6 +62,13 @@ SEARCH_URL = "http://core-indx-fcr01.open.ac.uk:9200/articles/_search"
 REPO_SEARCH_URL = "http://core-indx-fcr01.open.ac.uk:9200/repositories/_search"
 
 
+def query_es_by_title(title):
+  headers = {"Content-Type": "application/json"}
+  QUERY_BY_TITLE["query"]["bool"]["must"]["match"]["title"] = title
+  response = requests.post(SEARCH_URL, data=json.dumps(QUERY_BY_TITLE), headers=headers)
+  return response.json()
+
+
 def query_es_by_id(id):
     headers={"Content-Type":"application/json"}
     #QUERY_BY_ID["query"]["term"]["id"]["value"]=id

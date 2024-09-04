@@ -23,22 +23,19 @@ def set_seed(seed):
   np.random.seed(seed)
   torch.manual_seed(seed)
 
-def load_classifier(args, multi_label_model_path):
+def load_models(args, multi_label_model_path):
+
     with open(os.path.join(multi_label_model_path, f"linear_classifier_{args.dataset}.pkl"), "rb") as model_file:
         linear_classifier = pickle.load(model_file)
 
-    return linear_classifier
-
-def load_mlb(args, multi_label_model_path):
     with open(os.path.join(multi_label_model_path, f"mlb_{args.dataset}.pkl"), "rb") as mlb_file:
         mlb = pickle.load(mlb_file)
 
-    return mlb
-
-def load_embedding_model(args, multi_label_model_path):
     embbeding_model_path = os.path.join(multi_label_model_path, f"sbert_embedding_model{args.dataset}")
     embedding_model = SentenceTransformer(embbeding_model_path)
-    return embedding_model
+
+    return linear_classifier, mlb, embedding_model
+
 
 def write_results_to_file(args, metrics_tuple, multi_label_sdg_model_path):
     (strict_accuracy, weak_accuracy, hamming, precision_micro, recall_micro, f1_micro, precision_macro,
@@ -108,9 +105,10 @@ def main():
         else:
             logger.info('Check the config file. If no timed_dir, do model training first')
         multi_label_model_path = os.path.join(MODEL_DIR, os.path.basename(trained_model_dir))
-        linear_classifier = load_classifier(args, multi_label_model_path)
-        mlb = load_mlb(args, multi_label_model_path)
-        embedding_model = load_embedding_model(args, multi_label_model_path)
+        # linear_classifier = load_classifier(args, multi_label_model_path)
+        # mlb = load_mlb(args, multi_label_model_path)
+        # embedding_model = load_embedding_model(args, multi_label_model_path)
+        linear_classifier, mlb, embedding_model = load_models(args, multi_label_model_path)
         results = sdg_prediction(linear_classifier, embedding_model, mlb)
         results_df = pd.DataFrame(results)
         PREDICTIONS_DIR = os.path.join(OUTPUTS_DIR, trained_model_dir)

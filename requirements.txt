@@ -51,3 +51,4 @@ urllib3==2.2.2
 xxhash==3.5.0
 yarl==1.9.4
 waitress==3.0.0
+flask

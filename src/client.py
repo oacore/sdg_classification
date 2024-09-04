@@ -39,14 +39,14 @@ def classify_text():
 
     if not title and not abstract:
         #return jsonify({"error": "Title and abstract are required"}), 400
-        return Response(json.dumps({"error": "Title or abstract required"}), status=400, mimetype='application/json')
+        return Response(json.dumps({"error": "Title or abstract required"}), status=400, mimetype="application/json")
 
-    input_type = 'text'
+    input_type = "text"
     input_value = (title, abstract)
     results = sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value)
     print(results)
     results_serializable = convert_to_serializable(results)  # Convert to JSON-serializable format
-    return Response(json.dumps(results_serializable), mimetype='application/json')
+    return Response(json.dumps(results_serializable), mimetype="application/json")
 
     #return jsonify(results)
 
@@ -60,7 +60,7 @@ def classify_coreid():
     if not core_id:
         return jsonify({"error": "Core ID is required"}), 400
 
-    input_type = 'coreid'
+    input_type = "core_id"
     input_value = core_id
     results = sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value)
 
@@ -78,13 +78,13 @@ def classify_file():
     full_path = os.path.join(base_dir, file_path)  # Joins the base directory with the provided file path
 
     if not full_path:
-        return Response(json.dumps({"error": "File path is required"}), status=400, mimetype='application/json')
+        return Response(json.dumps({"error": "File path is required"}), status=400, mimetype="application/json")
 
     if not os.path.isfile(full_path):
-        return Response(json.dumps({"error": "File not found"}), status=400, mimetype='application/json')
+        return Response(json.dumps({"error": "File not found"}), status=400, mimetype="application/json")
 
     if allowed_file(full_path):
-        input_type = 'file'
+        input_type = "file"
         input_value = full_path
         results = sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value)
         results_serializable = convert_to_serializable(results)  # Convert to JSON-serializable format
@@ -103,16 +103,16 @@ if __name__ == "__main__":
     args = get_args()
     # Check if logging has already been configured
     if not logging.getLogger().handlers:
-        LogUtils.setup_logging(log_file_path=f'{PROJECT_ROOT}/repo.log')
+        LogUtils.setup_logging(log_file_path=f"{PROJECT_ROOT}/repo.log")
 
     logger = logging.getLogger(__name__)
-    logger.info('Application started')
+    logger.info("Application started")
     config_data = load_config()
     logger.info('Using %s config file', settings.config_file)
     if "timed_dir" in config_data:
         trained_model_dir = config_data["timed_dir"]
     else:
-        logger.info('Check the config file. If no timed_dir, do model training first')
+        logger.info("Check the config file. If no timed_dir, do model training first")
 
     multi_label_model_path = os.path.join(MODEL_DIR, os.path.basename(trained_model_dir))
     linear_classifier, mlb, embedding_model = load_models(args, multi_label_model_path)

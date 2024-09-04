@@ -3,7 +3,6 @@ import pandas as pd
 import random
 import pickle
 import csv
-from io import StringIO
 import ast
 from utils.configs_util import load_config
 import logging
@@ -17,6 +16,7 @@ from sklearn.metrics import (
     precision_score, recall_score, f1_score, hamming_loss, jaccard_score,
     log_loss, average_precision_score
 )
+from es_core import query_es_by_title, query_es_by_id
 from sentence_transformers import SentenceTransformer, InputExample, losses, models, datasets, evaluation
 from torch.utils.data import DataLoader
 from data import DATA_DIR
@@ -27,6 +27,8 @@ from warnings import simplefilter
 from sklearn.model_selection import train_test_split
 from arg_parser import get_args
 import numpy as np
+from metadata_extraction import get_core_id, CORESingleMetaDataExtraction
+
 # ignore all future warnings
 simplefilter(action='ignore', category=FutureWarning)
 
@@ -106,6 +108,22 @@ class ORODataLoader:
 
         df = pd.read_csv(os.path.join(self.oro_data_dir, 'oro_title_abstracts.txt'),
                                             sep='\t', encoding='utf-8', engine='python', on_bad_lines='skip')
+
+        # df = pd.read_csv(StringIO(os.path.join(self.oro_data_dir, 'oro_title_abstracts.txt')), sep='\t', encoding='utf-8',
+        #                  engine='python', quoting=csv.QUOTE_ALL, escapechar='\\', header=None)
+        df['title'].fillna('', inplace=True)
+        df['abstract'].fillna('', inplace=True)
+        df['text'] = df['title'] + '. ' + df['abstract']
+
+        return df
+
+class DataLoader:
+    def __init__(self, file_path):
+        self.file_path = file_path
+
+    def read_dataset(self):
+
+        df = pd.read_csv(self.file_path, sep='\t', encoding='utf-8', engine='python', on_bad_lines='skip')
 
         # df = pd.read_csv(StringIO(os.path.join(self.oro_data_dir, 'oro_title_abstracts.txt')), sep='\t', encoding='utf-8',
         #                  engine='python', quoting=csv.QUOTE_ALL, escapechar='\\', header=None)
@@ -666,14 +684,14 @@ class LinearClassifierORO:
 
 class Predict:
 
-    def __init__(self, oro_df, linear_classifier, embedding_model, mlb):
+    def __init__(self, linear_classifier, embedding_model, mlb):
 
-        self.oro_df = oro_df
+        #self.oro_df = oro_df
         self.linear_classifier = linear_classifier
         self.embedding_model = embedding_model
         self.mlb = mlb
         self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-distilroberta-v1')
-        self.threshold = 0.5
+        self.threshold = 0.6
 
 
     def head_tail_truncation(self, text, max_length=512, head_tokens=128, tail_tokens=382):
@@ -691,11 +709,10 @@ class Predict:
 
         return self.tokenizer.convert_tokens_to_string(truncated_tokens)
 
-    def prediction(self):
+    def predict_from_file(self, oro_df):
 
-        #x_eval = self.oro_df['text'].values.tolist()
-        self.oro_df['truncated_text'] = self.oro_df['text'].apply(lambda x: self.head_tail_truncation(x))
-        x_eval_truncated = self.oro_df['truncated_text'].values.tolist()
+        oro_df['truncated_text'] = oro_df['text'].apply(lambda x: self.head_tail_truncation(x))
+        x_eval_truncated = oro_df['truncated_text'].values.tolist()
         X_eval = np.array(self.embedding_model.encode(x_eval_truncated))
         y_pred_proba = self.linear_classifier.predict_proba(X_eval)
 
@@ -714,6 +731,33 @@ class Predict:
             predicted_probs.append(label_prob_dict)
 
         return predicted_probs
+
+    def predict_from_title_abstract(self, title, abstract):
+
+        text = title + ". " + abstract
+        truncated_text = self.head_tail_truncation(text)
+        X_eval = np.array(self.embedding_model.encode([truncated_text]))
+        y_pred_proba = self.linear_classifier.predict_proba(X_eval)[0]
+
+        label_prob_dict = {label: proba for label, proba in zip(self.mlb.classes_, y_pred_proba) if
+                           proba >= self.threshold}
+
+        return label_prob_dict
+
+    # def predict_from_coreid(self, core_id):
+    #     """
+    #     Predict SDGs from a core ID by retrieving the corresponding text.
+    #     """
+    #     row = self.oro_df[self.oro_df['id'] == core_id]
+    #     if row.empty:
+    #         return {"error": "Core ID not found."}
+    #
+    #     title = row['title'].values[0]
+    #     abstract = row['abstract'].values[0]
+    #
+    #     return self.predict_from_title_abstract(title, abstract)
+
+
 
 def desc_finetuning(model):
     LABEL_DESC_DIR = os.path.join(DATA_DIR, 'label_desc')
@@ -786,7 +830,7 @@ def sdg_prediction(linear_classifier, embedding_model, mlb):
     oro_data_loader = ORODataLoader(METADATA_DIR)
     oro_df = oro_data_loader.read_dataset()
     core_ids = oro_df['id']
-    inference = Predict(oro_df,  linear_classifier, embedding_model, mlb)
+    inference = Predict(linear_classifier, embedding_model, mlb)
     predicted_probs = inference.prediction()
     #predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
 
@@ -806,6 +850,66 @@ def sdg_prediction(linear_classifier, embedding_model, mlb):
 
     return results
     #return output_predictions_df
+
+def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value):
+
+    results = []
+    inference = Predict(linear_classifier, embedding_model, mlb)
+    # Handle different input types
+    if input_type == 'file':
+        file_path = input_value
+        data_loader = DataLoader(file_path)
+        df = data_loader.read_dataset()
+        core_ids = df['id']
+        predicted_probs = inference.predict_from_file(df)
+        for idx, prob_dict in enumerate(predicted_probs):
+            predictions = list(prob_dict.keys())
+            confidence_scores = list(prob_dict.values())
+
+            # Split the predictions and confidence scores
+            for pred, conf in zip(predictions, confidence_scores):
+                result = {
+                    "id": core_ids.iloc[idx],
+                    "predictions": pred,
+                    "confidence_score": round(conf * 100, 2)
+                }
+                results.append(result)
+
+    elif input_type == 'text':
+        title, abstract = input_value
+        response = query_es_by_title(title)
+        core_id = get_core_id(response)
+        prob_dict = inference.predict_from_title_abstract(title, abstract)
+
+        for pred, conf in prob_dict.items():
+            result = {
+                "id": core_id,
+                "predictions": pred,
+                "confidence_score": round(conf * 100, 2)
+            }
+            results.append(result)
+
+    elif input_type == 'coreid':
+        core_id = input_value
+        response = query_es_by_id(core_id)
+        metadata_processor = CORESingleMetaDataExtraction()
+        title_abstract = metadata_processor.get_title_abstract_es(response)
+        title = title_abstract.get('title', '')
+        abstract = title_abstract.get('abstract', '')
+        prob_dict = inference.predict_from_title_abstract(title, abstract)
+
+        if "error" in prob_dict:
+            return prob_dict  # Return the error message if core ID is not found
+
+        for pred, conf in prob_dict.items():
+            result = {
+                "core_id": core_id,
+                "predictions": pred,
+                "confidence_score": round(conf * 100, 2)
+            }
+            results.append(result)
+
+    return results
 
 
 

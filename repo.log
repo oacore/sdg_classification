@@ -518,3 +518,266 @@ DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentenc
 DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentence-transformers/all-distilroberta-v1 HTTP/11" 200 3728
 INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
 INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5007
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug:127.0.0.1 - - [03/Sep/2024 15:30:51] "[33mGET / HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [03/Sep/2024 15:30:51] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5007
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:18:19] "[31m[1mGET /classify_file?file_path=output/metadata/oro_title_abstracts.txt HTTP/1.1[0m" 400 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:21:39] "[35m[1mGET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:22:54] "[35m[1mGET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:37:31] "[35m[1mGET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:39:54] "[35m[1mGET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:41:18] "[35m[1mGET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:45:17] "[35m[1mGET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 14:47:47] "GET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5007
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 15:08:31] "GET /classify_file?file_path=../output/metadata/oro_title_abstracts.txt HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 15:28:25] "[31m[1mPOST /classify_text HTTP/1.1[0m" 405 -
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 15:32:30] "[31m[1mGET /classify_text?title=A%20meta-analysis%20of%20semantic%20classification%20of%20citations&abstract=This%20is%20an%20abstract. HTTP/1.1[0m" 415 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 15:37:40] "[31m[1mGET /classify_text?title=A%20meta-analysis%20of%20semantic%20classification%20of%20citations&abstract=This%20is%20an%20abstract. HTTP/1.1[0m" 415 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 15:52:05] "[35m[1mGET /classify_text?title=A%20meta-analysis%20of%20semantic%20classification%20of%20citations&abstract=This%20is%20an%20abstract. HTTP/1.1[0m" 500 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 36561
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 15:53:08] "GET /classify_text?title=A%20meta-analysis%20of%20semantic%20classification%20of%20citations&abstract=This%20is%20an%20abstract. HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 16:29:41] "[31m[1mGET /classify_text?title=Anti-Trafficking%20(ILL-)Efforts:%20The%20Legal%20Regulation%20of%20Women’s%20Bodies%20and%20Relationships%20in%20Cambodia.&abstract= HTTP/1.1[0m" 400 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/client.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 10494
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 16:32:22] "GET /classify_text?title=Anti-Trafficking%20(ILL-)Efforts:%20The%20Legal%20Regulation%20of%20Women’s%20Bodies%20and%20Relationships%20in%20Cambodia.&abstract= HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/sdg_finetuning.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 10504
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 16:34:10] "GET /classify_text?title=Anti-Trafficking%20(ILL-)Efforts:%20The%20Legal%20Regulation%20of%20Women’s%20Bodies%20and%20Relationships%20in%20Cambodia.&abstract= HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 16:58:55] "[33mGET / HTTP/1.1[0m" 404 -
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 36566
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 16:59:20] "GET /classify_text?title=A%20meta-analysis%20of%20semantic%20classification%20of%20citations&abstract=This%20is%20an%20abstract. HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 10503
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 17:00:00] "GET /classify_text?title=Anti-Trafficking%20(ILL-)Efforts:%20The%20Legal%20Regulation%20of%20Women’s%20Bodies%20and%20Relationships%20in%20Cambodia.&abstract= HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:Resetting dropped connection: huggingface.co
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 10492
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 17:10:27] "GET /classify_text?title=Anti-Trafficking%20(ILL-)Efforts:%20The%20Legal%20Regulation%20of%20Women’s%20Bodies%20and%20Relationships%20in%20Cambodia.&abstract=Global%20imaginations%20on%20human%20trafficking%20have%20been%20captured%20by%20a%20robust%20mythology%20that%20constructs%20the%20consenting%20Third%20World%20sex%20worker%20as%20simply%20a%20victim%20of%20trafficking%20for%20sexual%20exploitation.%20This%20anti-trafficking%20discourse%20has%20influenced%20Cambodia’s%20legal%20reform,%20which%20has%20resulted%20in%20an%20increase%20of%20abuse%20against%20sex%20workers%20and%20has%20denied%20Cambodian%20women%20their%20right%20to%20marry%20foreign%20men.%20Despite%20evidence%20indicating%20the%20diversity%20of%20the%20sex%20industry%20and%20its%20correlation%20to%20different%20levels%20of%20sex%20workers’%20autonomy,%20decision-makers%20have%20failed%20to%20revise%20the%20anti-trafficking%20framework%20to%20reflect%20the%20reality%20of%20the%20divergent%20lives%20of%20women%20who%20engage%20in%20sex%20as%20a%20livelihood. HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/Users/snk58/sdg_classification/src/sdg_finetuning.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:__main__:Application started
+INFO:__main__:Using config.json config file
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 137-631-694
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): core-indx-fcr01.open.ac.uk:9200
+DEBUG:urllib3.connectionpool:http://core-indx-fcr01.open.ac.uk:9200 "POST /articles/_search HTTP/11" 200 126
+INFO:werkzeug:127.0.0.1 - - [04/Sep/2024 17:14:59] "GET /classify_text?title=&abstract=Global%20imaginations%20on%20human%20trafficking%20have%20been%20captured%20by%20a%20robust%20mythology%20that%20constructs%20the%20consenting%20Third%20World%20sex%20worker%20as%20simply%20a%20victim%20of%20trafficking%20for%20sexual%20exploitation.%20This%20anti-trafficking%20discourse%20has%20influenced%20Cambodia’s%20legal%20reform,%20which%20has%20resulted%20in%20an%20increase%20of%20abuse%20against%20sex%20workers%20and%20has%20denied%20Cambodian%20women%20their%20right%20to%20marry%20foreign%20men.%20Despite%20evidence%20indicating%20the%20diversity%20of%20the%20sex%20industry%20and%20its%20correlation%20to%20different%20levels%20of%20sex%20workers’%20autonomy,%20decision-makers%20have%20failed%20to%20revise%20the%20anti-trafficking%20framework%20to%20reflect%20the%20reality%20of%20the%20divergent%20lives%20of%20women%20who%20engage%20in%20sex%20as%20a%20livelihood. HTTP/1.1" 200 -

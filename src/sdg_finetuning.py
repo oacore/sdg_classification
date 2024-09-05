@@ -871,7 +871,7 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
             # Split the predictions and confidence scores
             for pred, conf in zip(predictions, confidence_scores):
                 result = {
-                    "core_id": core_ids.iloc[idx],
+                    "id": core_ids.iloc[idx],
                     "predictions": pred,
                     "confidence_score": round(conf * 100, 2)
                 }
@@ -885,7 +885,7 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
 
         for pred, conf in prob_dict.items():
             result = {
-                "core_id": core_id,
+                "id": core_id,
                 "predictions": pred,
                 "confidence_score": round(conf * 100, 2)
             }
@@ -905,7 +905,7 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
 
         for pred, conf in prob_dict.items():
             result = {
-                "core_id": core_id,
+                "id": core_id,
                 "predictions": pred,
                 "confidence_score": round(conf * 100, 2)
             }

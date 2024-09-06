@@ -833,7 +833,7 @@ def sdg_prediction(linear_classifier, embedding_model, mlb):
     oro_df = oro_data_loader.read_dataset()
     core_ids = oro_df['id']
     inference = Predict(linear_classifier, embedding_model, mlb)
-    predicted_probs = inference.prediction()
+    predicted_probs = inference.predict_from_file(oro_df)
     #predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
 
     results = []

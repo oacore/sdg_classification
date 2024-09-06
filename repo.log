@@ -871,3 +871,35 @@ INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
 INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 137-631-694
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: all-distilroberta-v1
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/modules.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/config_sentence_transformers.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/README.md HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/modules.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/sentence_bert_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentence-transformers/all-distilroberta-v1/revision/main HTTP/11" 200 3728
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentence-transformers/all-distilroberta-v1 HTTP/11" 200 3728
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: all-distilroberta-v1
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/modules.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/config_sentence_transformers.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/README.md HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/modules.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/sentence_bert_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentence-transformers/all-distilroberta-v1/revision/main HTTP/11" 200 3728
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentence-transformers/all-distilroberta-v1 HTTP/11" 200 3728
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/snk58/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 200 0
+INFO:__main__:predictions saved to /Users/snk58/sdg_classification/output/results/202409012059_3001
+INFO:__main__:Process ended at: 1725612166.056809

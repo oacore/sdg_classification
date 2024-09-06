@@ -826,32 +826,67 @@ def multi_label_trainer(model):
 
     return results
 
-def sdg_prediction(linear_classifier, embedding_model, mlb):
+# def sdg_prediction(linear_classifier, embedding_model, mlb):
+#
+#     METADATA_DIR = os.path.join(OUTPUT_DIR, 'metadata')
+#     oro_data_loader = ORODataLoader(METADATA_DIR)
+#     oro_df = oro_data_loader.read_dataset()
+#     core_ids = oro_df['id']
+#     inference = Predict(linear_classifier, embedding_model, mlb)
+#     predicted_probs = inference.predict_from_file(oro_df)
+#     #predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
+#
+#     results = []
+#     for idx, prob_dict in enumerate(predicted_probs):
+#
+#         predictions = list(prob_dict.keys())
+#         confidence_scores = list(prob_dict.values())
+#
+#         # Split the predictions and confidence scores
+#         for pred, conf in zip(predictions, confidence_scores):
+#             result = {
+#                 "id": core_ids.iloc[idx],
+#                 "predictions": pred,
+#                 "confidence_score": round(conf * 100, 2)
+#             }
+#             results.append(result)
+#
+#     return results
+#     #return output_predictions_df
 
+
+def sdg_prediction(linear_classifier, embedding_model, mlb):
     METADATA_DIR = os.path.join(OUTPUT_DIR, 'metadata')
     oro_data_loader = ORODataLoader(METADATA_DIR)
     oro_df = oro_data_loader.read_dataset()
     core_ids = oro_df['id']
     inference = Predict(linear_classifier, embedding_model, mlb)
     predicted_probs = inference.predict_from_file(oro_df)
-    #predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
+    # predicted_labels_str = [', '.join(labels) for labels in predicted_labels]
 
     results = []
     for idx, prob_dict in enumerate(predicted_probs):
-        predictions = list(prob_dict.keys())
-        confidence_scores = list(prob_dict.values())
-
-        # Split the predictions and confidence scores
-        for pred, conf in zip(predictions, confidence_scores):
+        if not prob_dict:  # Check if the dictionary is empty
             result = {
                 "id": core_ids.iloc[idx],
-                "predictions": pred,
-                "confidence_score": round(conf * 100, 2)
+                "predictions": None,  # or use a placeholder value like "No Prediction"
+                "confidence_score": None  # or a placeholder value like 0
             }
             results.append(result)
+        else:
+            predictions = list(prob_dict.keys())
+            confidence_scores = list(prob_dict.values())
+
+            # Split the predictions and confidence scores
+            for pred, conf in zip(predictions, confidence_scores):
+                result = {
+                    "id": core_ids.iloc[idx],
+                    "predictions": pred,
+                    "confidence_score": round(conf * 100, 2)
+                }
+                results.append(result)
 
     return results
-    #return output_predictions_df
 
 def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value):
 
@@ -865,31 +900,46 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
         core_ids = df['id']
         predicted_probs = inference.predict_from_file(df)
         for idx, prob_dict in enumerate(predicted_probs):
-            predictions = list(prob_dict.keys())
-            confidence_scores = list(prob_dict.values())
-
-            # Split the predictions and confidence scores
-            for pred, conf in zip(predictions, confidence_scores):
+            if not prob_dict:  # Check if the dictionary is empty
                 result = {
                     "id": core_ids.iloc[idx],
-                    "predictions": pred,
-                    "confidence_score": round(conf * 100, 2)
+                    "predictions": None,  # or use a placeholder value like "No Prediction"
+                    "confidence_score": None  # or a placeholder value like 0
                 }
                 results.append(result)
+            else:
+                predictions = list(prob_dict.keys())
+                confidence_scores = list(prob_dict.values())
+
+                # Split the predictions and confidence scores
+                for pred, conf in zip(predictions, confidence_scores):
+                    result = {
+                        "id": core_ids.iloc[idx],
+                        "predictions": pred,
+                        "confidence_score": round(conf * 100, 2)
+                    }
+                    results.append(result)
 
     elif input_type == 'text':
         title, abstract = input_value
         response = query_es_by_title(title)
         core_id = get_core_id(response)
         prob_dict = inference.predict_from_title_abstract(title, abstract)
-
-        for pred, conf in prob_dict.items():
+        if not prob_dict:  # Check if the dictionary is empty
             result = {
                 "id": core_id,
-                "predictions": pred,
-                "confidence_score": round(conf * 100, 2)
+                "predictions": None,  # or use a placeholder value like "No Prediction"
+                "confidence_score": None  # or a placeholder value like 0
             }
             results.append(result)
+        else:
+            for pred, conf in prob_dict.items():
+                result = {
+                    "id": core_id,
+                    "predictions": pred,
+                    "confidence_score": round(conf * 100, 2)
+                }
+                results.append(result)
 
     elif input_type == 'core_id':
         core_id = input_value
@@ -899,19 +949,84 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
         title = title_abstract.get('title', '')
         abstract = title_abstract.get('abstract', '')
         prob_dict = inference.predict_from_title_abstract(title, abstract)
-
-        # if "error" in prob_dict:
-        #     return prob_dict  # Return the error message if core ID is not found
-
-        for pred, conf in prob_dict.items():
+        if not prob_dict:  # Check if the dictionary is empty
             result = {
                 "id": core_id,
-                "predictions": pred,
-                "confidence_score": round(conf * 100, 2)
+                "predictions": None,  # or use a placeholder value like "No Prediction"
+                "confidence_score": None  # or a placeholder value like 0
             }
             results.append(result)
 
+        else:
+            for pred, conf in prob_dict.items():
+                result = {
+                    "id": core_id,
+                    "predictions": pred,
+                    "confidence_score": round(conf * 100, 2)
+                }
+                results.append(result)
+
     return results
+
+# def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value):
+#
+#     results = []
+#     inference = Predict(linear_classifier, embedding_model, mlb)
+#     # Handle different input types
+#     if input_type == 'file':
+#         file_path = input_value
+#         data_loader = DataLoader(file_path)
+#         df = data_loader.read_dataset()
+#         core_ids = df['id']
+#         predicted_probs = inference.predict_from_file(df)
+#         for idx, prob_dict in enumerate(predicted_probs):
+#             predictions = list(prob_dict.keys())
+#             confidence_scores = list(prob_dict.values())
+#
+#             # Split the predictions and confidence scores
+#             for pred, conf in zip(predictions, confidence_scores):
+#                 result = {
+#                     "id": core_ids.iloc[idx],
+#                     "predictions": pred,
+#                     "confidence_score": round(conf * 100, 2)
+#                 }
+#                 results.append(result)
+#
+#     elif input_type == 'text':
+#         title, abstract = input_value
+#         response = query_es_by_title(title)
+#         core_id = get_core_id(response)
+#         prob_dict = inference.predict_from_title_abstract(title, abstract)
+#
+#         for pred, conf in prob_dict.items():
+#             result = {
+#                 "id": core_id,
+#                 "predictions": pred,
+#                 "confidence_score": round(conf * 100, 2)
+#             }
+#             results.append(result)
+#
+#     elif input_type == 'core_id':
+#         core_id = input_value
+#         response = query_es_by_id(core_id)
+#         metadata_processor = CORESingleMetaDataExtraction()
+#         title_abstract = metadata_processor.get_title_abstract_es(response)
+#         title = title_abstract.get('title', '')
+#         abstract = title_abstract.get('abstract', '')
+#         prob_dict = inference.predict_from_title_abstract(title, abstract)
+#
+#         # if "error" in prob_dict:
+#         #     return prob_dict  # Return the error message if core ID is not found
+#
+#         for pred, conf in prob_dict.items():
+#             result = {
+#                 "id": core_id,
+#                 "predictions": pred,
+#                 "confidence_score": round(conf * 100, 2)
+#             }
+#             results.append(result)
+#
+#     return results
 
 
 

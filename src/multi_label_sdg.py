@@ -79,6 +79,7 @@ def main():
     logger = logging.getLogger(__name__)
     sbert_model = SentenceTransformer('all-distilroberta-v1')
     start_time = time.time()
+    logger.info(f'Process started at: {start_time}')
 
     if args.do_train:
         logger.info(f'Model training strated at: {start_time}')

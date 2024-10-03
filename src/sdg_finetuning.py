@@ -127,6 +127,13 @@ class DataLoader:
 
         # df = pd.read_csv(StringIO(os.path.join(self.oro_data_dir, 'oro_title_abstracts.txt')), sep='\t', encoding='utf-8',
         #                  engine='python', quoting=csv.QUOTE_ALL, escapechar='\\', header=None)
+
+        # Ensure required columns are present
+        required_columns = {'id', 'title', 'abstract', 'date'}
+        if not required_columns.issubset(df.columns):
+            missing = required_columns - set(df.columns)
+            raise ValueError(f"Input file is missing required columns: {missing}")
+
         df['title'].fillna('', inplace=True)
         df['abstract'].fillna('', inplace=True)
         df['text'] = df['title'] + '. ' + df['abstract']
@@ -897,14 +904,41 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
         file_path = input_value
         data_loader = DataLoader(file_path)
         df = data_loader.read_dataset()
+
+        # Ensure 'date' is a string and clean it
+        df['date'] = df['date'].astype(str)
+        df['date'] = df['date'].str.strip()
+
+        def parse_date(date_str):
+            if pd.isnull(date_str) or date_str.strip() == '':
+                return pd.NaT
+            date_str = date_str.strip()
+            for fmt in ("%Y-%m-%d", "%Y-%m", "%Y"):
+                try:
+                    return pd.to_datetime(date_str, format=fmt)
+                except ValueError:
+                    continue
+            return pd.NaT
+
+        # Apply the custom date parsing function
+        df['date_parsed'] = df['date'].apply(parse_date)
+        df['year'] = df['date_parsed'].dt.year
+
         core_ids = df['id']
+        years = df['year']
         predicted_probs = inference.predict_from_file(df)
         for idx, prob_dict in enumerate(predicted_probs):
+            year = years.iloc[idx]
+            if pd.isnull(year):
+                year = None
+            else:
+                year = int(year)
             if not prob_dict:  # Check if the dictionary is empty
                 result = {
                     "id": core_ids.iloc[idx],
                     "predictions": None,  # or use a placeholder value like "No Prediction"
-                    "confidence_score": None  # or a placeholder value like 0
+                    "confidence_score": None,  # or a placeholder value like 0
+                    "year": year
                 }
                 results.append(result)
             else:
@@ -916,7 +950,8 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
                     result = {
                         "id": core_ids.iloc[idx],
                         "predictions": pred,
-                        "confidence_score": round(conf * 100, 2)
+                        "confidence_score": round(conf * 100, 2),
+                        "year": year
                     }
                     results.append(result)
 

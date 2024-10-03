@@ -20,7 +20,7 @@ For input file containing metadata -
 ````
 curl -X GET "http://localhost:5007/classify_file?file_path={path_to_metadata_file}
 ````
-Supported file format - .txt tab seperated file with header: 'id', 'title' and 'abstract'
+Supported file format - .txt tab seperated file with header: 'id', 'title', 'abstract' and 'date'
 
 For input title and abstract - 
 ````

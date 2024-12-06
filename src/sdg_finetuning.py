@@ -753,6 +753,17 @@ class Predict:
 
         return label_prob_dict
 
+    def predict_from_fulltext(self, fulltext):
+        text = fulltext
+        truncated_text = self.head_tail_truncation(text)
+        X_eval = np.array(self.embedding_model.encode([truncated_text]))
+        y_pred_proba = self.linear_classifier.predict_proba(X_eval)[0]
+
+        label_prob_dict = {label: proba for label, proba in zip(self.mlb.classes_, y_pred_proba) if
+                           proba >= self.threshold}
+
+        return label_prob_dict
+
     # def predict_from_coreid(self, core_id):
     #     """
     #     Predict SDGs from a core ID by retrieving the corresponding text.
@@ -975,7 +986,22 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
                     "confidence_score": round(conf * 100, 2)
                 }
                 results.append(result)
-
+    elif input_type == 'fulltext':
+        text = input_value
+        prob_dict = inference.predict_from_fulltext(text)
+        if not prob_dict:  # Check if the dictionary is empty
+            result = {
+                "predictions": None,  # or use a placeholder value like "No Prediction"
+                "confidence_score": None  # or a placeholder value like 0
+            }
+            results.append(result)
+        else:
+            for pred, conf in prob_dict.items():
+                result = {
+                    "predictions": pred,
+                    "confidence_score": round(conf * 100, 2)
+                }
+                results.append(result)
     elif input_type == 'core_id':
         core_id = input_value
         response = query_es_by_id(core_id)

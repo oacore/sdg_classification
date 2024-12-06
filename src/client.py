@@ -9,7 +9,8 @@ from models import MODEL_DIR
 from utils.log_utils import LogUtils
 from utils.constants import PROJECT_ROOT
 from utils.configs_util import load_config
-
+from werkzeug.utils import secure_filename
+import PyPDF2
 from multi_label_sdg import sdg_prediction_app, load_models
 import settings
 
@@ -31,14 +32,15 @@ def convert_to_serializable(obj):
     else:
         return obj
 
+
 @app.route("/classify_text")
 def classify_text():
-    #data = request.get_json()
+    # data = request.get_json()
     title = request.args.get("title")
     abstract = request.args.get("abstract")
 
     if not title and not abstract:
-        #return jsonify({"error": "Title and abstract are required"}), 400
+        # return jsonify({"error": "Title and abstract are required"}), 400
         return Response(json.dumps({"error": "Title or abstract required"}), status=400, mimetype="application/json")
 
     input_type = "text"
@@ -48,14 +50,13 @@ def classify_text():
     results_serializable = convert_to_serializable(results)  # Convert to JSON-serializable format
     return Response(json.dumps(results_serializable), mimetype="application/json")
 
-    #return jsonify(results)
+    # return jsonify(results)
 
 
 # Route 2: Classify using CoreID
 @app.route("/classify_coreid")
 def classify_coreid():
     core_id = request.args.get("core_id")
-
 
     if not core_id:
         return jsonify({"error": "Core ID is required"}), 400
@@ -67,15 +68,44 @@ def classify_coreid():
     return jsonify(results)
 
 
+def extract_text_from_pdf(pdf_path):
+    # Open the PDF file
+    with open(pdf_path, 'rb') as file:
+        # Initialize the PDF reader
+        pdf_reader = PyPDF2.PdfReader(file)
+
+        # Extract text from each page
+        text = ''
+        for page_num in range(len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_num]
+            text += page.extract_text()
+
+    return text
+
+
+def is_pdf_file(full_path):
+    if full_path.endswith("pdf"):
+        return True
 
 
 @app.route("/classify_file")
 def classify_file():
     # Get the file path from the query parameters
     file_path = request.args.get('file_path')
+    full_path = ""
+    if not file_path:
+        file = request.files['file']
+        if file.filename == '':
+            return "No file uploaded"
+        else:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join("/tmp/", filename))
+            full_path = os.path.join("/tmp/", filename)
+
     # Resolve the correct path relative to the current file
     base_dir = os.path.dirname(os.path.abspath(__file__))  # This gets the absolute path of the current directory (src/)
-    full_path = os.path.join(base_dir, file_path)  # Joins the base directory with the provided file path
+    if not full_path:
+        full_path = os.path.join(base_dir, file_path)  # Joins the base directory with the provided file path
 
     if not full_path:
         return Response(json.dumps({"error": "File path is required"}), status=400, mimetype="application/json")
@@ -83,6 +113,13 @@ def classify_file():
     if not os.path.isfile(full_path):
         return Response(json.dumps({"error": "File not found"}), status=400, mimetype="application/json")
 
+    if is_pdf_file(full_path):
+        text = extract_text_from_pdf(full_path)
+        input_type = "fulltext"
+        input_value = text
+        results = sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value)
+        results_serializable = convert_to_serializable(results)  # Convert to JSON-serializable format
+        return Response(json.dumps(results_serializable), mimetype='application/json')
     if allowed_file(full_path):
         input_type = "file"
         input_value = full_path
@@ -90,7 +127,8 @@ def classify_file():
         results_serializable = convert_to_serializable(results)  # Convert to JSON-serializable format
         return Response(json.dumps(results_serializable), mimetype='application/json')
 
-    return Response(json.dumps({"error": "Invalid file type. Use a tab separated .txt file"}), status=400, mimetype='application/json')
+    return Response(json.dumps({"error": "Invalid file type. Use a tab separated .txt file"}), status=400,
+                    mimetype='application/json')
 
 
 def allowed_file(filename):

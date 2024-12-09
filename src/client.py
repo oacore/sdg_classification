@@ -88,7 +88,7 @@ def is_pdf_file(full_path):
         return True
 
 
-@app.route("/classify_file")
+@app.route("/classify_file", methods=['GET', 'POST'])
 def classify_file():
     # Get the file path from the query parameters
     file_path = request.args.get('file_path')

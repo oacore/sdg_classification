@@ -1027,7 +1027,68 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
                 }
                 results.append(result)
 
+    elif input_type == 'entities_bulk':
+        """
+        input_value is a list of dictionaries:
+        [
+          { "id": 101, "title": "...", "description": "..." },
+          { "id": 102, "title": "...", "description": "..." },
+          ...
+        ]
+        We'll build a pandas DataFrame in-memory, then reuse .predict_from_file style logic.
+        """
+
+        entities_list = input_value
+        rows = []
+        for e in entities_list:
+            rows.append({
+                "id": e["id"],
+                "title": e["title"] or "",
+                "abstract": e["description"] or ""
+            })
+        df = pd.DataFrame(rows)
+        df["title"].fillna("", inplace=True)
+        df["abstract"].fillna("", inplace=True)
+        df["text"] = df["title"] + ". " + df["abstract"]
+
+        predicted_probs = inference.predict_from_file(df)
+        core_ids = df["id"].values
+        for idx, prob_dict in enumerate(predicted_probs):
+            doc_id = core_ids[idx]
+            add_prob_dict_to_response(doc_id, prob_dict, results)
+
+    if input_type == 'single_doc':
+        """
+        input_value is a tuple (doc_id, title, description).
+        We'll do something similar to 'predict_from_title_abstract'.
+        """
+        doc_id, title, description = input_value
+        # Ensure they are not None
+        title = title if title else ""
+        description = description if description else ""
+
+        # Use your 'predict_from_title_abstract' or do it inline:
+        prob_dict = inference.predict_from_title_abstract(title, description)
+
+        add_prob_dict_to_response(doc_id, prob_dict, results)
+
     return results
+
+
+def add_prob_dict_to_response(doc_id, prob_dict, results):
+    if not prob_dict:
+        results.append({
+            "id": doc_id,
+            "predictions": None,
+            "confidence_score": None
+        })
+    else:
+        for pred_label, conf in prob_dict.items():
+            results.append({
+                "id": doc_id,
+                "predictions": pred_label,
+                "confidence_score": round(conf * 100, 2)
+            })
 
 # def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value):
 #

@@ -131,6 +131,75 @@ def classify_file():
                     mimetype='application/json')
 
 
+@app.route("/classify_entities_bulk", methods=["POST"])
+def classify_entities_bulk():
+    try:
+        data = request.get_json()
+        if not data or "entities" not in data:
+            return Response(
+                json.dumps({"error": "Missing 'entities' field in JSON payload"}),
+                status=400,
+                mimetype="application/json"
+            )
+
+        entities = data["entities"]
+        # Validate
+        for e in entities:
+            if not all(k in e for k in ("id", "title", "description")):
+                return Response(json.dumps({
+                    "error": "Each entity must have 'id', 'title', 'description'"
+                }), status=400, mimetype="application/json")
+
+        # Instead of building DataFrame here, we pass it to sdg_prediction_app
+        input_type = "entities_bulk"
+        input_value = entities  # The list of dicts
+
+        # sdg_prediction_app does the DataFrame creation + classification
+        res = sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value)
+
+        results_serializable = convert_to_serializable(res)
+        return Response(json.dumps(results_serializable), mimetype="application/json")
+
+    except Exception as e:
+        return Response(json.dumps({"error": str(e)}), status=500, mimetype="application/json")
+
+
+@app.route("/classify_document", methods=["POST"])
+def classify_document():
+    """
+    Expects JSON like:
+    {
+      "id": 123,
+      "title": "Document Title",
+      "description": "Document abstract or body"
+    }
+    Returns classification results in a JSON array
+    (like [ { "id": 123, "predictions": "SDG 7", "confidence_score": 90.3 }, ... ]).
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return Response(json.dumps({"error": "Missing JSON body"}), status=400, mimetype="application/json")
+
+        doc_id = data.get("id")
+        title = data.get("title", "")
+        description = data.get("description", "")
+
+        # Validate
+        if doc_id is None:
+            return Response(json.dumps({"error": "Field 'id' is required"}), status=400, mimetype="application/json")
+
+        input_type = "single_doc"
+        input_value = (doc_id, title, description)
+
+        res = sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value)
+
+        return Response(json.dumps(res), mimetype="application/json")
+
+    except Exception as e:
+        return Response(json.dumps({"error": str(e)}), status=500, mimetype="application/json")
+
+
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'txt'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

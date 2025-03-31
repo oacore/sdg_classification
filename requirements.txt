@@ -39,10 +39,10 @@ scipy==1.14.1
 sentence-transformers==3.0.1
 setuptools==73.0.1
 six==1.16.0
-sympy==1.13.2
+sympy==1.13.1
 threadpoolctl==3.5.0
 tokenizers==0.19.1
-torch==2.4.0
+torch==2.5.1
 tqdm==4.66.5
 transformers==4.44.1
 typing_extensions==4.12.2

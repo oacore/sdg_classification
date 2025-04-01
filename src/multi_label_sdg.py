@@ -1,5 +1,4 @@
 import os.path
-import logging
 import time
 from utils.file_utils import FileUtils
 from utils.configs_util import create_config
@@ -13,15 +12,6 @@ from utils.constants import PROJECT_ROOT
 # ignore all future warnings
 simplefilter(action='ignore', category=FutureWarning)
 
-import numpy as np
-
-import random
-import torch
-
-def set_seed(seed):
-  random.seed(seed)
-  np.random.seed(seed)
-  torch.manual_seed(seed)
 
 def load_models(args, multi_label_model_path):
 
@@ -31,7 +21,7 @@ def load_models(args, multi_label_model_path):
     with open(os.path.join(multi_label_model_path, f"mlb_{args.dataset}.pkl"), "rb") as mlb_file:
         mlb = pickle.load(mlb_file)
 
-    embbeding_model_path = os.path.join(multi_label_model_path, f"sbert_embedding_model{args.dataset}")
+    embbeding_model_path = os.path.join(multi_label_model_path, f"sbert_embedding_model_{args.dataset}")
     embedding_model = SentenceTransformer(embbeding_model_path)
 
     return linear_classifier, mlb, embedding_model
@@ -50,7 +40,7 @@ def write_results_to_file(args, metrics_tuple, multi_label_sdg_model_path):
         os.makedirs(RESULTS_DIR)
 
     results_path = os.path.join(RESULTS_DIR, f'results_{args.dataset}_{args.seed}.txt')
-
+    print(results_path)
     with open(results_path, 'w') as file:
         file.write("Test data Results:" + '\n')
         file.write(f"Strict Accuracy: {strict_accuracy}\n")
@@ -80,7 +70,7 @@ def main():
     sbert_model = SentenceTransformer('all-distilroberta-v1')
     start_time = time.time()
     logger.info(f'Process started at: {start_time}')
-
+    OUTPUTS_DIR = os.path.join(OUTPUT_DIR, 'results')
     if args.do_train:
         logger.info(f'Model training strated at: {start_time}')
         multi_label_sdg_model_path = FileUtils.create_timed_directory(MODEL_DIR, args.seed)
@@ -89,13 +79,20 @@ def main():
             logger.info('SBERT finetuning on label desc data')
             desc_model = desc_finetuning(sbert_model)
             logger.info(f'SBERT finetuning on {args.dataset} dataset')
-            results = multi_label_trainer(desc_model)
+            results, predictions = multi_label_trainer(desc_model)
 
         else:
             logger.info(f'SBERT finetuning on {args.dataset} dataset')
-            results = multi_label_trainer(sbert_model)
+            results, predictions = multi_label_trainer(sbert_model)
 
+        config_data = load_config()
+        trained_model_dir = config_data["timed_dir"]
+        PREDICTIONS_DIR = os.path.join(OUTPUTS_DIR, trained_model_dir)
+        if not os.path.exists(PREDICTIONS_DIR):
+            # If it doesn't exist, create the directory
+            os.makedirs(PREDICTIONS_DIR)
         write_results_to_file(args, results, multi_label_sdg_model_path)
+        predictions.to_csv(os.path.join(PREDICTIONS_DIR, "predictions.tsv"), sep='\t', index=False)
 
     if args.do_pred:
         trained_model_dir = str

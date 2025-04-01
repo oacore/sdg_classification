@@ -16,6 +16,7 @@ def create_config(args, model_path):
         json.dump({'timed_dir': os.path.basename(model_path),
                    'random_seed': args.seed, 'num_train': args.num_training, 'num_iter': args.num_iter}, config_file)
 
+
 def load_config():
     config_path = join(
         PROJECT_ROOT, settings.config_file

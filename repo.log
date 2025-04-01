@@ -978,14 +978,3 @@ INFO:__main__:Process ended at: 1725616718.842349
 INFO:__main__:Application started
 INFO:__main__:Using config.json config file
 INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
-INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/matteo/workspace/KMI/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:5007
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with stat
-INFO:__main__:Application started
-INFO:__main__:Using config.json config file
-INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
-INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: /Users/matteo/workspace/KMI/sdg_classification/models/202409012059_3001/sbert_embedding_modelknowledge_hub
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 599-782-748

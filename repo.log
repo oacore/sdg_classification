@@ -977,4 +977,29 @@ INFO:__main__:predictions saved to /Users/snk58/sdg_classification/output/result
 INFO:__main__:Process ended at: 1725616718.842349
 INFO:__main__:Application started
 INFO:__main__:Using config.json config file
-INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mpsINFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: mps
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: all-distilroberta-v1
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/modules.json HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/modules.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/config_sentence_transformers.json HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/config_sentence_transformers.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/README.md HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/README.md HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/modules.json HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/modules.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/sentence_bert_config.json HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/sentence_bert_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/config.json HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/tokenizer_config.json HTTP/11" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentence-transformers/all-distilroberta-v1/revision/main HTTP/11" 200 4892
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "GET /api/models/sentence-transformers/all-distilroberta-v1 HTTP/11" 200 4892
+INFO:__main__:Process started at: 1755694374.7564402
+INFO:__main__:Model training strated at: 1755694374.7564402
+INFO:__main__:SBERT finetuning on label desc data
+INFO:__main__:SBERT finetuning on synthetic dataset
+INFO:sdg_finetuning:Reading in-domain evaluation dataset
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /sentence-transformers/all-distilroberta-v1/resolve/main/tokenizer_config.json HTTP/11" 307 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /api/resolve-cache/models/sentence-transformers/all-distilroberta-v1/842eaed40bee4d61673a81c92d5689a8fed7a09f/tokenizer_config.json HTTP/11" 200 0

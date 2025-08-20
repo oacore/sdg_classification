@@ -147,6 +147,50 @@ class MultiLabelDatasetOROLoader:
         df['labels'] = df['labels'].apply(self.safe_literal_eval)
         return df
 
+
+class MultiLabelDatasetAugmentedLoader:
+    def __init__(self, oro_path, aurora_path):
+        self.oro_path = oro_path
+        self.aurora_path = aurora_path
+
+    def safe_literal_eval(self, val):
+        if val is None:
+            return None
+        try:
+            return ast.literal_eval(val)
+        except (ValueError, SyntaxError) as e:
+            print(f"Skipping malformed value: {val}. Error: {e}")
+            return None
+
+    def load_single_dataset(self, file_path):
+        df = pd.read_csv(file_path, sep='\t', encoding='utf-8', engine='python')
+
+        # Drop first unnamed column if present (like index)
+        if df.columns[0].lower().startswith("unnamed"):
+            df = df.iloc[:, 1:]
+
+        # Handle missing values
+        df['abstract'].fillna('', inplace=True)
+        df['title'].fillna('', inplace=True)
+
+        # Combine title + abstract
+        df['text'] = df['title'] + ". " + df['abstract']
+
+        # If labels exist, parse them
+        if 'labels' in df.columns:
+            df['labels'] = df['labels'].apply(self.safe_literal_eval)
+
+        return df
+
+    def read_dataset(self):
+        oro_df = self.load_single_dataset(self.oro_path)
+        aurora_df = self.load_single_dataset(self.aurora_path)
+
+        # Concatenate
+        df = pd.concat([oro_df, aurora_df], ignore_index=True)
+        df.insert(0, "id", df.index.astype(str))
+        return df
+
 class ORODataLoader:
     def __init__(self, oro_data_dir):
         self.oro_data_dir = oro_data_dir
@@ -1026,203 +1070,6 @@ class LinearClassifierORO(LinearClassifierSynthetic):
         y_pred = (y_pred_proba >= threshold).astype(int)
 
         return self.compute_metrics(y_eval_binary, y_pred, y_pred_proba, y_eval)
-# class LinearClassifierORO:
-#
-#     def __init__(self, test_df, mlb=None):
-#         self.linear_classifier = OneVsRestClassifier(LogisticRegression())
-#         self.mlb = mlb if mlb is not None else MultiLabelBinarizer()
-#         self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-distilroberta-v1')
-#         self.test_df = test_df
-#         self.text = self.test_df.columns.values[4]
-#         self.labels_col = self.test_df.columns.values[3]
-#
-#     def head_tail_truncation(self, text, max_length=512, head_tokens=128, tail_tokens=382):
-#         """
-#         Truncates the input text, keeping the first `head_tokens` and the last `tail_tokens` tokens,
-#         ensuring the total length does not exceed `max_length`.
-#         """
-#         tokens = self.tokenizer.tokenize(text)
-#         if len(tokens) > max_length:
-#             if head_tokens + tail_tokens > max_length:
-#                 raise ValueError("Sum of head_tokens and tail_tokens exceeds max_length.")
-#             truncated_tokens = tokens[:head_tokens] + tokens[-tail_tokens:]
-#         else:
-#             truncated_tokens = tokens
-#
-#         return self.tokenizer.convert_tokens_to_string(truncated_tokens)
-#
-#
-#     def train_model(self, x_train, y_train, model):
-#         # Apply truncation consistently
-#         self.test_df['truncated_text'] = self.test_df[self.text].apply(
-#             lambda x: self.head_tail_truncation(x)
-#         )
-#         x_eval = self.test_df['truncated_text'].values.tolist()
-#         #x_eval = self.test_df['combined_text'].values.tolist()
-#         y_train_binary = self.mlb.fit_transform(y_train)
-#         X_train = np.array(model.encode(x_train))
-#         X_eval = np.array(model.encode(x_eval))
-#
-#         y_train_binary = np.array(y_train_binary)
-#         #self.linear_classifier.fit(X_train, y_train)
-#         self.linear_classifier.fit(X_train, y_train_binary)
-#         return X_eval, self.linear_classifier, self.mlb
-#
-#
-#     def eval_model(self, X_eval, classifier):
-#         """
-#         Given the predictions and golds, run the evaluation in several modes: weak, strict, ...
-#         :param X_eval: The input features for evaluation.
-#         :param classifier: The trained classifier model.
-#         :return: A tuple containing various evaluation metrics.
-#         """
-#
-#         threshold = 0.6
-#         y_eval = self.test_df[self.labels_col].values.tolist()
-#         y_eval_binary = self.mlb.transform(y_eval)
-#
-#         # **Recompute X_eval to match the test dataset**
-#         self.test_df['truncated_text'] = self.test_df[self.text].apply(lambda x: self.head_tail_truncation(x))
-#         x_eval = self.test_df['truncated_text'].values.tolist()
-#         X_eval = np.array(self.model.encode(x_eval))  # Recompute embeddings
-#
-#         # **Check shape match**
-#         if X_eval.shape[0] != y_eval_binary.shape[0]:
-#             raise ValueError(
-#                 f"Mismatch: X_eval has {X_eval.shape[0]} samples, y_eval has {y_eval_binary.shape[0]} samples.")
-#
-#         # Predict probabilities
-#         y_pred_proba = classifier.predict_proba(X_eval)
-#
-#         # Apply threshold to probabilities to obtain binary predictions
-#         y_pred = (y_pred_proba >= threshold).astype(int)
-#
-#         # Compute strong accuracy
-#         strict_matches = np.all(y_pred == y_eval_binary, axis=1)
-#         strict_accuracy = np.mean(strict_matches)
-#
-#         # Compute weak accuracy
-#         weak_matches = np.any(np.logical_and(y_pred, y_eval_binary), axis=1)
-#         weak_accuracy = np.mean(weak_matches)
-#
-#         # Compute per-class metrics
-#         num_classes = y_eval_binary.shape[1]
-#         APs = []
-#         for j in range(num_classes):
-#             AP = average_precision_score(y_eval_binary[:, j], y_pred_proba[:, j])
-#             APs.append(AP)
-#
-#         # Compute macro mAP (unweighted average of APs)
-#         macro_mAP = np.mean(APs)
-#
-#         # Compute weighted mAP (average of APs weighted by number of positives)
-#         class_counts = np.sum(y_eval_binary, axis=0)
-#         weighted_mAP = np.average(APs, weights=class_counts)
-#
-#         # Compute micro mAP (global-based)
-#         micro_mAP = average_precision_score(y_eval_binary.ravel(), y_pred_proba.ravel())
-#
-#         # Compute Hamming loss
-#         hamming = hamming_loss(y_eval_binary, y_pred)
-#
-#         # Compute Precision, Recall, F1-Score
-#         precision_micro = precision_score(y_eval_binary, y_pred, average='micro')
-#         recall_micro = recall_score(y_eval_binary, y_pred, average='micro')
-#         precision_macro = precision_score(y_eval_binary, y_pred, average='macro')
-#         recall_macro = recall_score(y_eval_binary, y_pred, average='macro')
-#         f1_micro = f1_score(y_eval_binary, y_pred, average='micro')
-#         f1_macro = f1_score(y_eval_binary, y_pred, average='macro')
-#
-#         # Compute Jaccard Similarity
-#         jaccard_sim = jaccard_score(y_eval_binary, y_pred, average='micro')
-#
-#         # Compute Log Loss
-#         logloss = log_loss(y_eval_binary, y_pred_proba)
-#         # Save predictions and actual values
-#         # Generating predictions with probabilities clearly
-#         predictions = []
-#         for instance_probas in y_pred_proba:
-#             label_prob_dict = {label: proba
-#                                for label, proba in zip(self.mlb.classes_, instance_probas)
-#                                if proba >= threshold}
-#             predictions.append(label_prob_dict)
-#         print(predictions)
-#         predictions_df = pd.DataFrame({
-#             "y_pred": predictions,
-#             "y_actual": y_eval
-#         })
-#         #predictions_df.to_csv("predictions_.tsv", sep='\t', index=False)
-#
-#         # Return all the computed metrics
-#         return (strict_accuracy, weak_accuracy, hamming, precision_micro, recall_micro, f1_micro, precision_macro,
-#                 recall_macro, f1_macro, jaccard_sim, logloss, macro_mAP, weighted_mAP, micro_mAP, APs), predictions_df
-#
-#
-#     def evaluate_metrics(self, y_eval, y_pred, y_pred_proba):
-#         # Handle empty values (consider filtering or imputation)
-#         valid_indices = [i for i, row in enumerate(y_eval) if any(row)]  # Indices with non-empty labels
-#         y_eval = np.array(y_eval)[valid_indices]
-#         y_pred = y_pred[valid_indices]
-#         y_pred_proba = y_pred_proba[valid_indices]
-#
-#         # Multi-label binarization (assuming self.mlb is already fit)
-#         y_eval_binary = self.mlb.transform(y_eval)
-#
-#         # Compute metrics
-#         strict_matches = np.all(y_pred == y_eval_binary, axis=1)
-#         strict_accuracy = np.mean(strict_matches)
-#
-#         weak_matches = np.any(np.logical_and(y_pred, y_eval_binary), axis=1)
-#         weak_accuracy = np.mean(weak_matches)
-#
-#         num_classes = y_eval_binary.shape[1]
-#         APs = []
-#         class_counts = np.zeros(num_classes)  # Initialize class counts with zeros
-#         for j in range(num_classes):
-#             # Check for empty class in ground truth
-#             if not np.any(y_eval_binary[:, j]):
-#                 APs.append(0)  # Assign 0 AP for empty class
-#             else:
-#                 # Calculate AP for non-empty class
-#                 AP = average_precision_score(y_eval_binary[:, j], y_pred_proba[:, j])
-#                 APs.append(AP)
-#                 class_counts[j] = np.sum(y_eval_binary[:, j])  # Update class count
-#
-#         # Compute mAPs
-#         macro_mAP = np.mean(APs)
-#         weighted_mAP = np.average(APs, weights=class_counts)
-#         micro_mAP = average_precision_score(y_eval_binary.ravel(), y_pred_proba.ravel())
-#
-#         # Other metrics
-#         hamming = hamming_loss(y_eval_binary, y_pred)
-#         precision_micro = precision_score(y_eval_binary, y_pred, average='micro')
-#         recall_micro = recall_score(y_eval_binary, y_pred, average='micro')
-#         f1_micro = f1_score(y_eval_binary, y_pred, average='micro')
-#         precision_macro = precision_score(y_eval_binary, y_pred, average='macro')
-#         recall_macro = recall_score(y_eval_binary, y_pred, average='macro')
-#         f1_macro = f1_score(y_eval_binary, y_pred, average='macro')
-#         jaccard_sim = jaccard_score(y_eval_binary, y_pred, average='micro')
-#         logloss = log_loss(y_eval_binary, y_pred_proba)
-#
-#         # Return dictionary of metrics
-#         metrics = {
-#             "Strict Accuracy": strict_accuracy,
-#             "Weak Accuracy": weak_accuracy,
-#             "Macro mAP": macro_mAP,
-#             "Weighted mAP": weighted_mAP,
-#             "Micro mAP": micro_mAP,
-#             "Hamming Loss": hamming,
-#             "Precision (Micro)": precision_micro,
-#             "Recall (Micro)": recall_micro,
-#             "F1 Score (Micro)": f1_micro,
-#             "Precision (Macro)": precision_macro,
-#             "Recall (Macro)": recall_macro,
-#             "F1 Score (Macro)": f1_macro,
-#             "Jaccard Similarity": jaccard_sim,
-#             "Log Loss": logloss
-#         }
-#
-#         return metrics
 
 
 class Predict:
@@ -1357,6 +1204,16 @@ def multi_label_trainer(model):
         logger.info("Reading in-domain evaluation dataset")
         oro_loader = LOADER_CLASSES['oro'](MULTI_LABEL_DATA_DIRS['oro'])
         test_df = oro_loader.read_dataset()
+    elif args.do_augmented_eval:
+        logger.info("Reading in-domain augmented evaluation dataset")
+        aug_paths = MULTI_LABEL_DATA_DIRS["augmented"]
+        augmented_loader = LOADER_CLASSES["augmented"](aug_paths["oro"], aug_paths["aurora"])
+        test_df = augmented_loader.read_dataset()
+    elif args.do_synthetic_eval:
+        logger.info("Reading the synthetic evaluation dataset")
+        synthetic_loader = LOADER_CLASSES['synthetic'](MULTI_LABEL_DATA_DIRS['synthetic'])
+        _, test_df = synthetic_loader.read_dataset()
+
     else:
         test_df = default_test_df
 
@@ -1389,9 +1246,12 @@ def multi_label_trainer(model):
         pickle.dump(mlb, mlb_file)
 
     # **Evaluation: Use ORO Dataset if Required**
-    if args.do_in_domain_eval:
-        logger.info("Performing in-domain evaluation using ORO dataset")
+    if args.do_in_domain_eval or args.do_augmented_eval:
+        logger.info("Performing in-domain evaluation")
         evaluation_trainer = LinearClassifierORO(test_df, mlb)  # Use gold dataset
+    elif args.do_synthetic_eval:
+        logger.info("Evaluating using Synthetic dataset")
+        evaluation_trainer = LinearClassifierSynthetic(test_df, mlb)
     else:
         if dataset_type == "knowledge_hub":
             logger.info("Evaluating using Knowledge Hub dataset")
@@ -1825,14 +1685,19 @@ def add_prob_dict_to_response(doc_id, prob_dict, results):
 MULTI_LABEL_DATA_DIRS = {
     'knowledge_hub': os.path.join(DATA_DIR, 'sdg_knowledge_hub'),
     'synthetic': os.path.join(DATA_DIR, 'synthetic_data'),
-    'oro': os.path.join(DATA_DIR, 'manually_annotated_oro')
+    'oro': os.path.join(DATA_DIR, 'manually_annotated_oro'),
+    "augmented": {
+        "oro": os.path.join(DATA_DIR, 'manually_annotated_oro'),
+        "aurora": os.path.join(DATA_DIR, 'aurora_survey_data')
+    }
 }
 
 # Loader and Fine-tuning Class mappings
 LOADER_CLASSES = {
     'knowledge_hub': MultiLabelDatasetLoader,
     'synthetic': MultiLabelSyntheticDatasetLoader,
-    'oro': MultiLabelDatasetOROLoader
+    'oro': MultiLabelDatasetOROLoader,
+    'augmented': MultiLabelDatasetAugmentedLoader
 }
 
 FINETUNING_CLASSES = {

@@ -4,7 +4,7 @@ import argparse
 def get_args():
     parser = argparse.ArgumentParser(description="Multi-label SDG classification")
 
-    parser.add_argument("--num_training", default=64, type=int,
+    parser.add_argument("--num_training", default=128, type=int,
                         help="few-shot instances")
     parser.add_argument("--dataset", default="knowledge_hub", choices=["osdg", "benchmark", "knowledge_hub",
                                                                        "manually_annotated", "synthetic"],
@@ -16,13 +16,16 @@ def get_args():
 
     parser.add_argument("--do_train", action="store_true", help="Whether to perform training")
     parser.add_argument("--do_in_domain_eval",  action="store_true", help="Whether to perform in domain evaluation")
+    parser.add_argument("--do_synthetic_eval", action="store_true", help="Whether to perform synthetic test evaluation")
+    parser.add_argument("--do_augmented_eval", action="store_true", help="Whether to perform in domain "
+                                                                         "augmented data evaluation")
     parser.add_argument("--do_pred", action="store_true", help="Whether to perform prediction")
 
     parser.add_argument("--label_desc_finetuning", action='store_true',
                         help="Whether to run training.")
     parser.add_argument("--multi_label_finetuning", action='store_true',
                         help="Whether to run training.")
-    parser.add_argument('--seed', type=int, default=88, help="random seed for initialization")
+    parser.add_argument('--seed', type=int, default=42, help="random seed for initialization")
 
     args = parser.parse_args()
 

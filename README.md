@@ -20,7 +20,7 @@ python3 "$PROJECT_DIR/src/multi_label_sdg.py" --label_desc_finetuning --dataset=
 ````
 ### Two-stage SBERT fine-tuning + Classification
 ````
-python3 "$PROJECT_DIR/src/multi_label_sdg.py" --multi_label_finetuning --dataset=synthetic --do_train
+python3 "$PROJECT_DIR/src/multi_label_sdg.py" --label_desc_finetuning --multi_label_finetuning --dataset=synthetic --do_train
 
 ````
 Synthetic dataset is available at data/synthetic_data/synthetic_final.tsv

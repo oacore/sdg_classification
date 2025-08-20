@@ -20,6 +20,8 @@ def get_args():
     parser.add_argument("--do_augmented_eval", action="store_true", help="Whether to perform in domain "
                                                                          "augmented data evaluation")
     parser.add_argument("--do_pred", action="store_true", help="Whether to perform prediction")
+    #parser.add_argument("--do_eval", action="store_true", help="Whether to perform just evaluation using "
+             #                                                  "different datasets")
 
     parser.add_argument("--label_desc_finetuning", action='store_true',
                         help="Whether to run training.")

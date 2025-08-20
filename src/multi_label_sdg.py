@@ -9,6 +9,8 @@ from sentence_transformers import SentenceTransformer, InputExample, losses, mod
 from warnings import simplefilter
 from utils.log_utils import LogUtils
 from utils.constants import PROJECT_ROOT
+import json
+from sdg_finetuning import sdg_prediction
 # ignore all future warnings
 simplefilter(action='ignore', category=FutureWarning)
 
@@ -116,6 +118,35 @@ def main():
         results_df.to_csv(os.path.join(PREDICTIONS_DIR, f'predictions_{args.dataset}_{args.seed}.txt'), sep='\t',
                           index=False, header=True)
         logger.info(f"predictions saved to {PREDICTIONS_DIR}")
+
+    # if args.do_eval:
+    #     # Shared model loading logic
+    #     trained_model_dir = str
+    #     OUTPUTS_DIR = os.path.join(OUTPUT_DIR, 'results')
+    #     config_data = load_config()
+    #     if "timed_dir" in config_data:
+    #         trained_model_dir = config_data["timed_dir"]
+    #     else:
+    #         logger.info('Check the config file. If no timed_dir, do model training first')
+    #     multi_label_model_path = os.path.join(MODEL_DIR, os.path.basename(trained_model_dir))
+    #     linear_classifier, mlb, embedding_model = load_models(args, multi_label_model_path)
+    #     results, predictions = model_evaluation(args, linear_classifier, embedding_model, mlb)
+    #     # Save results
+    #     EVAL_RESULTS_DIR = os.path.join(OUTPUTS_DIR, trained_model_dir, "eval")
+    #     os.makedirs(EVAL_RESULTS_DIR, exist_ok=True)
+    #
+    #     # Save predictions
+    #     predictions.to_csv(
+    #         os.path.join(EVAL_RESULTS_DIR, f'eval_predictions_{args.dataset}_{args.seed}.txt'),
+    #         sep='\t', index=False, header=True
+    #     )
+    #
+    #     # Optionally save evaluation metrics
+    #     results_path = os.path.join(EVAL_RESULTS_DIR, f'eval_results_{args.dataset}_{args.seed}.json')
+    #     with open(results_path, 'w') as f:
+    #         json.dump(results, f, indent=2)
+    #
+    #     logger.info(f"Evaluation results saved to {results_path}")
 
     end_time = time.time()
 

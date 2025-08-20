@@ -8,4 +8,3 @@ models/202503311305_88/sbert_embedding_model_synthetic filter=lfs diff=lfs merge
 models/202503311305_88/linear_classifier_synthetic.pkl filter=lfs diff=lfs merge=lfs -text
 models/202503311305_88/mlb_synthetic.pkl filter=lfs diff=lfs merge=lfs -text
 models/202503311305_88/results_synthetic_88.txt filter=lfs diff=lfs merge=lfs -text
-models/** filter=lfs diff=lfs merge=lfs -text

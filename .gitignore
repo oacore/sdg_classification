@@ -168,3 +168,4 @@ __pycache__
 # Project
 repo.log
 models/*
+models/

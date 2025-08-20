@@ -166,8 +166,8 @@ class MultiLabelDatasetAugmentedLoader:
         df = pd.read_csv(file_path, sep='\t', encoding='utf-8', engine='python')
 
         # Drop first unnamed column if present (like index)
-        if df.columns[0].lower().startswith("unnamed"):
-            df = df.iloc[:, 1:]
+        #if df.columns[0].lower().startswith("unnamed"):
+        df = df.iloc[:, 1:]
 
         # Handle missing values
         df['abstract'].fillna('', inplace=True)
@@ -179,12 +179,12 @@ class MultiLabelDatasetAugmentedLoader:
         # If labels exist, parse them
         if 'labels' in df.columns:
             df['labels'] = df['labels'].apply(self.safe_literal_eval)
-
+        print(df)
         return df
 
     def read_dataset(self):
-        oro_df = self.load_single_dataset(self.oro_path)
-        aurora_df = self.load_single_dataset(self.aurora_path)
+        oro_df = self.load_single_dataset(os.path.join(self.oro_path, 'oro_gold_dataset.txt'))
+        aurora_df = self.load_single_dataset(os.path.join(self.aurora_path, 'aurora_survey_final.txt'))
 
         # Concatenate
         df = pd.concat([oro_df, aurora_df], ignore_index=True)
@@ -1207,6 +1207,7 @@ def multi_label_trainer(model):
     elif args.do_augmented_eval:
         logger.info("Reading in-domain augmented evaluation dataset")
         aug_paths = MULTI_LABEL_DATA_DIRS["augmented"]
+        print(aug_paths)
         augmented_loader = LOADER_CLASSES["augmented"](aug_paths["oro"], aug_paths["aurora"])
         test_df = augmented_loader.read_dataset()
     elif args.do_synthetic_eval:
@@ -1261,142 +1262,49 @@ def multi_label_trainer(model):
             evaluation_trainer = LinearClassifierSynthetic(test_df, mlb)
         else:
             raise ValueError(f"Unsupported dataset type: {dataset_type}")
-        #evaluation_trainer = LinearClassifierSynthetic(test_df, mlb)  # Use same dataset as training
 
-    # **Pass `embedding_model` to `eval_model()` to ensure correct embeddings**
     results, predictions = evaluation_trainer.eval_model(embedding_model, classifier)
 
     return results, predictions
 
-# def multi_label_trainer(model):
-#     args = get_args()
-#     trained_model_dir = str
-#     config_data = load_config()
+# def model_evaluation(args, linear_classifier, embedding_model, mlb):
 #     logger = logging.getLogger(__name__)
-#
-#     if "timed_dir" in config_data:
-#         trained_model_dir = config_data["timed_dir"]
-#     else:
-#         logger.info('Check the config path')
-#
 #     dataset_type = args.dataset
 #     if dataset_type not in ['knowledge_hub', 'synthetic']:
 #         raise ValueError('Supported dataset types: knowledge_hub, synthetic')
 #
-#     # Load dataset and fine-tuning classes dynamically
+#     # **Load dataset and fine-tuning classes dynamically**
 #     data_loader_class = LOADER_CLASSES[dataset_type]
-#     finetuning_class = FINETUNING_CLASSES[dataset_type]
 #     multi_label_data_loader = data_loader_class(MULTI_LABEL_DATA_DIRS[dataset_type])
-#     train_df, default_test_df = multi_label_data_loader.read_dataset()
-#
-#     # Override test_df if in-domain evaluation is requested
+#     _, default_test_df = multi_label_data_loader.read_dataset()
 #     if args.do_in_domain_eval:
 #         logger.info("Reading in-domain evaluation dataset")
 #         oro_loader = LOADER_CLASSES['oro'](MULTI_LABEL_DATA_DIRS['oro'])
 #         test_df = oro_loader.read_dataset()
+#     elif args.do_augmented_eval:
+#         logger.info("Reading in-domain augmented evaluation dataset")
+#         aug_paths = MULTI_LABEL_DATA_DIRS["augmented"]
+#         augmented_loader = LOADER_CLASSES["augmented"](aug_paths["oro"], aug_paths["aurora"])
+#         test_df = augmented_loader.read_dataset()
+#     elif args.do_synthetic_eval:
+#         logger.info("Reading the synthetic evaluation dataset")
+#         synthetic_loader = LOADER_CLASSES['synthetic'](MULTI_LABEL_DATA_DIRS['synthetic'])
+#         _, test_df = synthetic_loader.read_dataset()
+#
 #     else:
 #         test_df = default_test_df
 #
-#     # Fine-tuning
-#     SBERT_finetuning = finetuning_class(train_df, model)
-#     x_train, y_train, train_examples = SBERT_finetuning.prepare_data()
-#
-#     if args.multi_label_finetuning:
-#         embedding_model = SBERT_finetuning.sbert_finetuning(train_examples)
-#     else:
-#         embedding_model = model
-#
-#     # Save embedding model
-#     multi_label_model_path = os.path.join(MODEL_DIR, os.path.basename(trained_model_dir))
-#     embedding_model.save_pretrained(os.path.join(multi_label_model_path, f"sbert_embedding_model_{dataset_type}"))
-#
-#     # **Train on Synthetic Data Only**
-#     trainer_class = LinearClassifierSynthetic
-#     multilabel_sdg_trainer = trainer_class(train_df)
-#
-#     classifier, mlb = multilabel_sdg_trainer.train_model(x_train, y_train)
-#
-#     # Save classifier and MultiLabelBinarizer
-#     with open(os.path.join(multi_label_model_path, f"linear_classifier_{dataset_type}.pkl"), "wb") as model_file:
-#         pickle.dump(classifier, model_file)
-#
-#     with open(os.path.join(multi_label_model_path, f"mlb_{dataset_type}.pkl"), "wb") as mlb_file:
-#         pickle.dump(mlb, mlb_file)
-#
-#     # **Evaluation: Use ORO Dataset if Required**
-#     if args.do_in_domain_eval:
-#         logger.info("Performing in-domain evaluation using ORO dataset")
+#     if args.do_in_domain_eval or args.do_augmented_eval:
+#         logger.info("Performing in-domain evaluation")
 #         evaluation_trainer = LinearClassifierORO(test_df, mlb)  # Use gold dataset
+#     elif args.do_synthetic_eval:
+#         logger.info("Evaluating using Synthetic dataset")
+#         evaluation_trainer = LinearClassifierSynthetic(test_df, mlb)
 #     else:
-#         evaluation_trainer = LinearClassifierSynthetic(test_df, mlb)  # Use same dataset as training
 #
-#     # Pass `model` to `eval_model()` to ensure embeddings are computed correctly
-#     results, predictions = evaluation_trainer.eval_model(embedding_model, classifier)
-#
-#     return results, predictions
-
-# def multi_label_trainer(model):
-#     args = get_args()
-#     trained_model_dir = str
-#     config_data = load_config()
-#     logger = logging.getLogger(__name__)
-#     if "timed_dir" in config_data:
-#         trained_model_dir = config_data["timed_dir"]
-#     else:
-#         logger.info('Check the config path')
-#
-#     dataset_type = args.dataset
-#     if dataset_type not in ['knowledge_hub', 'synthetic']:
-#         raise ValueError('Supported dataset types: knowledge_hub, synthetic')
-#
-#     # Load dataset and fine-tuning classes dynamically
-#     data_loader_class = LOADER_CLASSES[dataset_type]
-#     finetuning_class = FINETUNING_CLASSES[dataset_type]
-#     multi_label_data_loader = data_loader_class(MULTI_LABEL_DATA_DIRS[dataset_type])
-#     train_df, default_test_df = multi_label_data_loader.read_dataset()
-#
-#     # Override test_df if in-domain evaluation is requested
-#     if args.do_in_domain_eval:
-#         logger.info("Reading in-domain evaluation dataset")
-#         oro_loader = LOADER_CLASSES['oro'](MULTI_LABEL_DATA_DIRS['oro'])
-#         test_df = oro_loader.read_dataset()
-#     else:
-#         test_df = default_test_df
-#
-#     # Fine-tuning
-#     SBERT_finetuning = finetuning_class(train_df, model)
-#     x_train, y_train, train_examples = SBERT_finetuning.prepare_data()
-#
-#     if args.multi_label_finetuning:
-#         embedding_model = SBERT_finetuning.sbert_finetuning(train_examples)
-#     else:
-#         embedding_model = model
-#
-#     # Save embedding model
-#     multi_label_model_path = os.path.join(MODEL_DIR, os.path.basename(trained_model_dir))
-#     embedding_model.save_pretrained(os.path.join(multi_label_model_path, f"sbert_embedding_model_{dataset_type}"))
-#
-#     # **Train on Synthetic Data Only**
-#     trainer_class = LinearClassifierSynthetic
-#     multilabel_sdg_trainer = trainer_class(train_df)
-#
-#     classifier, mlb = multilabel_sdg_trainer.train_model(x_train, y_train)
-#
-#     # Save classifier and MultiLabelBinarizer
-#     with open(os.path.join(multi_label_model_path, f"linear_classifier_{dataset_type}.pkl"), "wb") as model_file:
-#         pickle.dump(classifier, model_file)
-#
-#     with open(os.path.join(multi_label_model_path, f"mlb_{dataset_type}.pkl"), "wb") as mlb_file:
-#         pickle.dump(mlb, mlb_file)
-#
-#     # **Evaluation: Use ORO Dataset if Required**
-#     if args.do_in_domain_eval:
-#         logger.info("Performing in-domain evaluation using ORO dataset")
-#         evaluation_trainer = LinearClassifierORO(test_df, mlb)  # Use gold dataset
-#     else:
-#         evaluation_trainer = LinearClassifierSynthetic(test_df, mlb)  # Use same dataset
-#
-#     results, predictions = evaluation_trainer.eval_model(X_eval, classifier)
+#         raise ValueError(f"Unsupported dataset type")
+#     # **Pass `embedding_model` to `eval_model()` to ensure correct embeddings**
+#     results, predictions = evaluation_trainer.eval_model(embedding_model, linear_classifier)
 #
 #     return results, predictions
 
@@ -1601,7 +1509,6 @@ def sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, inpu
         add_prob_dict_to_response(doc_id, prob_dict, results)
 
     return results
-
 
 
 def add_prob_dict_to_response(doc_id, prob_dict, results):

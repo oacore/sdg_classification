@@ -4,7 +4,7 @@ import argparse
 def get_args():
     parser = argparse.ArgumentParser(description="Multi-label SDG classification")
 
-    parser.add_argument("--num_training", default=128, type=int,
+    parser.add_argument("--num_training", default=256, type=int,
                         help="few-shot instances")
     parser.add_argument("--dataset", default="knowledge_hub", choices=["osdg", "benchmark", "knowledge_hub",
                                                                        "manually_annotated", "synthetic"],

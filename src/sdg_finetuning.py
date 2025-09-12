@@ -179,7 +179,7 @@ class MultiLabelDatasetAugmentedLoader:
         # If labels exist, parse them
         if 'labels' in df.columns:
             df['labels'] = df['labels'].apply(self.safe_literal_eval)
-        print(df)
+
         return df
 
     def read_dataset(self):
@@ -1207,13 +1207,14 @@ def multi_label_trainer(model):
     elif args.do_augmented_eval:
         logger.info("Reading in-domain augmented evaluation dataset")
         aug_paths = MULTI_LABEL_DATA_DIRS["augmented"]
-        print(aug_paths)
         augmented_loader = LOADER_CLASSES["augmented"](aug_paths["oro"], aug_paths["aurora"])
         test_df = augmented_loader.read_dataset()
+
     elif args.do_synthetic_eval:
         logger.info("Reading the synthetic evaluation dataset")
         synthetic_loader = LOADER_CLASSES['synthetic'](MULTI_LABEL_DATA_DIRS['synthetic'])
         _, test_df = synthetic_loader.read_dataset()
+        print(len(test_df))
 
     else:
         test_df = default_test_df

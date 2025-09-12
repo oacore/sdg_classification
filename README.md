@@ -27,12 +27,17 @@ Synthetic dataset is available at data/synthetic_data/synthetic_final.tsv
 
 To train the model on Out-if-Domain (OOD) [Knowledge Hub Dataset](https://zenodo.org/records/7523032),
 ````
-python3 "$PROJECT_DIR/src/multi_label_sdg.py" --multi_label_finetuning --dataset=knowledge_hub --do_train
+python3 "$PROJECT_DIR/src/multi_label_sdg.py" --label_desc_finetuning --multi_label_finetuning --dataset=knowledge_hub --do_train
 
 ````
 To perform evaluation on the manually annotated multi-label scientific SDG dataset, 
 ````
 python3 "$PROJECT_DIR/src/multi_label_sdg.py" --multi_label_finetuning --dataset=synthetic --do_train --do_in_domain_eval
+
+````
+To perform evaluation on the synthetic SDG dataset, 
+````
+python3 "$PROJECT_DIR/src/multi_label_sdg.py" --multi_label_finetuning --dataset=synthetic --do_train --do_synthetic_eval
 
 ````
 
@@ -43,30 +48,49 @@ Manually annotated dataset of papers from Open Research Online (ORO) is availabl
 
 
 
-## Running the App
-To get results for the input file (containing core_id, title and abstract), or a single title and abstract, or for a CORE_ID, use either of the following steps:
+[//]: # (## Running the App)
 
-For input file containing metadata - 
-````
-curl -X GET "http://localhost:5007/classify_file?file_path={path_to_metadata_file}
-````
-Supported file format - .txt tab seperated file with header: 'id', 'title', 'abstract' and 'date'
+[//]: # (To get results for the input file &#40;containing core_id, title and abstract&#41;, or a single title and abstract, or for a CORE_ID, use either of the following steps:)
 
-For input title and abstract - 
-````
-curl -X GET "http://localhost:5007/classify_text?title={title}&abstract={abstract}
-````
+[//]: # ()
+[//]: # (For input file containing metadata - )
 
-For input core_id - 
-````
-curl -X GET "http://localhost:5007/classify_coreid?core_id={core_id}
-````
-where core_id is the identifier of research papers in [https://core.ac.uk/services/api](https://core.ac.uk/services/api) open-access repository    
+[//]: # (````)
 
-To get the prediction for a sample file (see output/metadata/oro_title_abstract.txt), run the scripts
-````
-./run_scripts.sh
-````
+[//]: # (curl -X GET "http://localhost:5007/classify_file?file_path={path_to_metadata_file})
+
+[//]: # (````)
+
+[//]: # (Supported file format - .txt tab seperated file with header: 'id', 'title', 'abstract' and 'date')
+
+[//]: # ()
+[//]: # (For input title and abstract - )
+
+[//]: # (````)
+
+[//]: # (curl -X GET "http://localhost:5007/classify_text?title={title}&abstract={abstract})
+
+[//]: # (````)
+
+[//]: # ()
+[//]: # (For input core_id - )
+
+[//]: # (````)
+
+[//]: # (curl -X GET "http://localhost:5007/classify_coreid?core_id={core_id})
+
+[//]: # (````)
+
+[//]: # (where core_id is the identifier of research papers in [https://core.ac.uk/services/api]&#40;https://core.ac.uk/services/api&#41; open-access repository    )
+
+[//]: # ()
+[//]: # (To get the prediction for a sample file &#40;see output/metadata/oro_title_abstract.txt&#41;, run the scripts)
+
+[//]: # (````)
+
+[//]: # (./run_scripts.sh)
+
+[//]: # (````)
 
 ## Demo page
 The source code for the demo page, [CORE Labs](https://core.ac.uk/labs/sdg) is available here -

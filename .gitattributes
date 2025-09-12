@@ -1,5 +1,4 @@
 models/202409012059_3001/sbert_embedding_modelknowledge_hub/* filter=lfs diff=lfs merge=lfs -text
-models/* filter=lfs diff=lfs merge=lfs -text
 models/202409012059_3001/sbert_embedding_model_knowledge_hub filter=lfs diff=lfs merge=lfs -text
 models/202409012059_3001/linear_classifier_knowledge_hub.pkl filter=lfs diff=lfs merge=lfs -text
 models/202409012059_3001/mlb_knowledge_hub.pkl filter=lfs diff=lfs merge=lfs -text

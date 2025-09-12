@@ -168,5 +168,4 @@ __pycache__
 # Project
 repo.log
 models/*
-models/
-models/
+!models/__init__.py

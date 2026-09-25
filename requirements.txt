@@ -54,3 +54,5 @@ waitress==3.0.1
 flask
 werkzeug
 pypdf2
+mysql-connector-python
+

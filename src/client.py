@@ -11,7 +11,8 @@ from utils.constants import PROJECT_ROOT
 from utils.configs_util import load_config
 from werkzeug.utils import secure_filename
 import PyPDF2
-from multi_label_sdg import sdg_prediction_app, load_models
+from multi_label_sdg import sdg_prediction_app, load_models, process_papers_by_dataprovider
+from database import DatabaseConnectionPool, DatabaseConnection
 import settings
 
 app = Flask(__name__)
@@ -66,6 +67,39 @@ def classify_coreid():
     results = sdg_prediction_app(linear_classifier, embedding_model, mlb, input_type, input_value)
 
     return jsonify(results)
+
+
+# Route 3: Classify papers for a single dataprovider_id with pagination
+@app.route("/classify_dataprovider")
+def classify_dataprovider():
+    dataprovider_id = request.args.get("dataprovider_id")
+    if not dataprovider_id:
+        return Response(json.dumps({"error": "dataprovider_id is required"}), status=400, mimetype="application/json")
+
+    try:
+        dataprovider_id = int(dataprovider_id)
+    except ValueError:
+        return Response(json.dumps({"error": "dataprovider_id must be an integer"}), status=400, mimetype="application/json")
+
+    db_config = load_config().get("db_config")
+    if not db_config:
+        return Response(json.dumps({"error": "db_config not configured in config file"}), status=500, mimetype="application/json")
+
+    pool = DatabaseConnectionPool(db_config=db_config, pool_size=2)
+    try:
+        with pool.connection() as conn:
+            db_conn = DatabaseConnection(conn, entity_type="output")
+            result = process_papers_by_dataprovider(
+                db_conn,
+                linear_classifier,
+                embedding_model,
+                mlb,
+                dataprovider_id=dataprovider_id,
+            )
+    finally:
+        pool.close()
+
+    return Response(json.dumps(result), mimetype="application/json")
 
 
 def extract_text_from_pdf(pdf_path):

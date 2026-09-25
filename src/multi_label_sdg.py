@@ -62,6 +62,67 @@ def write_results_to_file(args, metrics_tuple, multi_label_sdg_model_path):
         file.write(f"micro Average Precision: {micro_mAP}\n")
         file.write(f"Average Precision: {APs}\n")
 
+def process_papers_by_dataprovider(db_conn, linear_classifier, embedding_model, mlb, dataprovider_id: int, chunk_size: int = 1000):
+    """
+    Paginates through all papers for a single dataprovider_id, runs SDG classification,
+    and updates article_sdg_classification table in database.
+    """
+    logger = logging.getLogger(__name__)
+    inference = Predict(linear_classifier, embedding_model, mlb)
+    last_id = 0
+    total_papers_processed = 0
+    total_classifications_saved = 0
+
+    while True:
+        papers = db_conn.fetch_outputs_by_dataprovider_chunk(
+            dataprovider_id=dataprovider_id,
+            last_id=last_id,
+            chunk_size=chunk_size,
+        )
+        if not papers:
+            break
+
+        total_papers_processed += len(papers)
+        records_to_insert = []
+        texts = []
+        paper_ids = []
+
+        for paper in papers:
+            title = paper.get('title') or ''
+            abstract = paper.get('abstract') or ''
+            text = f"{title}. {abstract}"
+            truncated = inference.head_tail_truncation(text)
+            texts.append(truncated)
+            paper_ids.append(paper['id'])
+
+        if texts:
+            X_eval = np.array(embedding_model.encode(texts, show_progress_bar=False))
+            y_pred_proba = linear_classifier.predict_proba(X_eval)
+
+            for i, proba_row in enumerate(y_pred_proba):
+                pid = paper_ids[i]
+                for sdg_label, proba in zip(mlb.classes_, proba_row):
+                    if proba >= inference.threshold:
+                        conf_score = round(float(proba) * 100, 2)
+                        records_to_insert.append((pid, sdg_label, conf_score))
+
+        if records_to_insert:
+            saved_count = db_conn.save_article_sdg_classifications(records_to_insert)
+            total_classifications_saved += saved_count
+
+        last_id = papers[-1]['id']
+        logger.info(
+            f"Dataprovider {dataprovider_id}: Processed {total_papers_processed} papers "
+            f"up to output.id={last_id}, saved {total_classifications_saved} classifications so far."
+        )
+
+    return {
+        "dataprovider_id": dataprovider_id,
+        "papers_processed": total_papers_processed,
+        "classifications_saved": total_classifications_saved,
+    }
+
+
 def main():
     args = get_args()
     # Check if logging has already been configured

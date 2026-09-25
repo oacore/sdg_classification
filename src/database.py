@@ -731,7 +731,9 @@ class DatabaseConnection:
         query = """
             INSERT INTO article_sdg_classification (id_document, sdg_class, confidence_score)
             VALUES (%s, %s, %s)
-            ON DUPLICATE KEY UPDATE confidence_score = VALUES(confidence_score)
+            ON DUPLICATE KEY UPDATE
+                sdg_class = VALUES(sdg_class),
+                confidence_score = VALUES(confidence_score)
         """
         cursor = self._conn.cursor()
         try:

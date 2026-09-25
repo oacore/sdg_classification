@@ -73,16 +73,41 @@ def process_papers_by_dataprovider(db_conn, linear_classifier, embedding_model, 
     total_papers_processed = 0
     total_classifications_saved = 0
 
+ad    logger.info(
+        "Starting SDG classification for dataprovider_id=%s (chunk_size=%s)",
+        dataprovider_id,
+        chunk_size,
+    )
+
+    chunk_num = 0
     while True:
+        chunk_num += 1
+        logger.info(
+            "Fetching chunk #%s for dataprovider_id=%s (last output.id=%s, limit=%s)...",
+            chunk_num,
+            dataprovider_id,
+            last_id,
+            chunk_size,
+        )
         papers = db_conn.fetch_outputs_by_dataprovider_chunk(
             dataprovider_id=dataprovider_id,
             last_id=last_id,
             chunk_size=chunk_size,
         )
         if not papers:
+            logger.info("No more papers found for dataprovider_id=%s after output.id=%s", dataprovider_id, last_id)
             break
 
-        total_papers_processed += len(papers)
+        papers_count = len(papers)
+        total_papers_processed += papers_count
+        logger.info(
+            "Fetched %s papers in chunk #%s (output.id range: %s - %s)",
+            papers_count,
+            chunk_num,
+            papers[0]['id'],
+            papers[-1]['id'],
+        )
+
         records_to_insert = []
         texts = []
         paper_ids = []
@@ -96,6 +121,7 @@ def process_papers_by_dataprovider(db_conn, linear_classifier, embedding_model, 
             paper_ids.append(paper['id'])
 
         if texts:
+            logger.info("Encoding and classifying %s paper texts for dataprovider_id=%s...", len(texts), dataprovider_id)
             X_eval = np.array(embedding_model.encode(texts, show_progress_bar=False))
             y_pred_proba = linear_classifier.predict_proba(X_eval)
 
@@ -106,15 +132,35 @@ def process_papers_by_dataprovider(db_conn, linear_classifier, embedding_model, 
                         conf_score = round(float(proba) * 100, 2)
                         records_to_insert.append((pid, sdg_label, conf_score))
 
+            logger.info(
+                "Chunk #%s: Found %s SDG predictions (confidence >= %s)",
+                chunk_num,
+                len(records_to_insert),
+                inference.threshold,
+            )
+
+        saved_count = 0
         if records_to_insert:
             saved_count = db_conn.save_article_sdg_classifications(records_to_insert)
             total_classifications_saved += saved_count
 
         last_id = papers[-1]['id']
         logger.info(
-            f"Dataprovider {dataprovider_id}: Processed {total_papers_processed} papers "
-            f"up to output.id={last_id}, saved {total_classifications_saved} classifications so far."
+            "Dataprovider %s progress [Chunk #%s]: %s papers processed, %s SDG classifications saved in batch (%s total saved so far, max output.id=%s)",
+            dataprovider_id,
+            chunk_num,
+            total_papers_processed,
+            saved_count,
+            total_classifications_saved,
+            last_id,
         )
+
+    logger.info(
+        "Finished SDG classification for dataprovider_id=%s: Total papers processed: %s, Total classifications saved: %s",
+        dataprovider_id,
+        total_papers_processed,
+        total_classifications_saved,
+    )
 
     return {
         "dataprovider_id": dataprovider_id,

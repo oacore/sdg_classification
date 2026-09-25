@@ -68,6 +68,8 @@ def process_papers_by_dataprovider(db_conn, linear_classifier, embedding_model, 
     and updates article_sdg_classification table in database.
     """
     logger = logging.getLogger(__name__)
+    if hasattr(embedding_model, 'max_seq_length'):
+        embedding_model.max_seq_length = 512
     inference = Predict(linear_classifier, embedding_model, mlb)
     last_id = 0
     total_papers_processed = 0

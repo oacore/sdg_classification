@@ -73,7 +73,7 @@ def process_papers_by_dataprovider(db_conn, linear_classifier, embedding_model, 
     total_papers_processed = 0
     total_classifications_saved = 0
 
-ad    logger.info(
+    logger.info(
         "Starting SDG classification for dataprovider_id=%s (chunk_size=%s)",
         dataprovider_id,
         chunk_size,

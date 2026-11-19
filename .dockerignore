@@ -1,0 +1,26 @@
+.git
+.github
+.idea
+.vscode
+**/.DS_Store
+**/__pycache__
+*.py[cod]
+venv
+.venv
+.env
+
+kube
+Dockerfile
+.dockerignore
+repo.log
+
+# Training / evaluation data is not needed for serving
+data/**
+!data/__init__.py
+!data/label_desc/__init__.py
+output/**
+!output/__init__.py
+
+# Trained models are mounted at runtime
+models/**
+!models/__init__.py

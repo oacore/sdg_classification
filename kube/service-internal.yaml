@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chars-sdg-classification-internal
+  namespace: chars
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.0.14.251
+spec:
+  type: LoadBalancer
+  selector:
+    app: chars-sdg-classification
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

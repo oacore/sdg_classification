@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chars-sdg-classification
+  namespace: chars
+  labels:
+    app: chars-sdg-classification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chars-sdg-classification
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: chars-sdg-classification
+    spec:
+      # nodeSelector:
+      #   agentpool: userpool
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: chars-sdg-classification
+          image: ${IMAGE}
+          args: ["--dataset", "synthetic"]
+          ports:
+            - name: http
+              containerPort: 5007
+          env:
+            - name: CHARS_ENV
+              value: prod
+            - name: OMP_NUM_THREADS
+              value: "2"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          startupProbe:
+            tcpSocket:
+              port: 5007
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            failureThreshold: 150
+            timeoutSeconds: 3
+          readinessProbe:
+            tcpSocket:
+              port: 5007
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 5007
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 5
